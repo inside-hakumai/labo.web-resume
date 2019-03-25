@@ -1,0 +1,8 @@
+{
+  "name": "labo.web-resume",
+  "version": "0.0.1",
+  "main": "index.js",
+  "author": "inside-hakumai <inside.rice164@gmail.com>",
+  "license": "MIT",
+  "private": false
+}
