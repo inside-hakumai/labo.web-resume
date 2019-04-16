@@ -12,6 +12,7 @@
     "@types/gulp": "^4.0.6",
     "@types/gulp-sass": "^0.0.31",
     "gulp": "^4.0.0",
+    "gulp-ejs": "^3.3.0",
     "gulp-sass": "^4.0.2",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-typescript": "^5.0.1",

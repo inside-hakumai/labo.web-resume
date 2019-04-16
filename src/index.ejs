@@ -1,0 +1,124 @@
+<%
+function yieldAuthorList(publication) {
+    var resultStr = "";
+    publication.author.forEach(function (atr, index, array) {
+        if (atr === name.ja) {
+            resultStr += `<span class="author_me">${atr}</span>`;
+        } else {
+            resultStr += atr;
+        }
+
+        if (index !== array.length - 1) {
+            resultStr += "，";
+        }
+    });
+    return resultStr;
+}
+
+function yieldConference(publication) {
+    var resultStr = publication.conference;
+    if (publication.award) {
+        resultStr += ` <span class="award">(${publication.award})</span>`;
+    }
+    return resultStr;
+}
+
+function yieldAwardsHtml(awards) {
+    var resultStr = "";
+
+    if (awards.length !== 0) {
+        resultStr += "<dl>";
+
+        awards.forEach(function(entry) {
+            resultStr += `<dt>${entry.scene}</dt>`;
+            resultStr += `<dd>${entry.award}</dd>`;
+        });
+
+        resultStr += "</dl>";
+    }
+    return resultStr;
+}
+
+function yieldWorksHtml(works) {
+    var resultStr = "";
+
+    works.forEach(function(workTypeEntry) {
+        resultStr += `<h3>${workTypeEntry.type.ja}</h3>`;
+
+        if (workTypeEntry.entries && workTypeEntry.entries.length !== 0) {
+            resultStr += "<ul>";
+
+            workTypeEntry.entries.forEach(function(workEntry) {
+                resultStr += "<li>";
+                resultStr += `<span class="job_title">${workEntry.title}</span> ${workEntry.detail}`;
+                resultStr += "</li>";
+            });
+
+            resultStr += "</ul>";
+        }
+    });
+
+    return resultStr;
+}
+%>
+
+<html>
+
+<head>
+    <title><%= name.ja %> - <%= name.en %></title>
+    <link rel="stylesheet" href="./css/normalize.css">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+<main>
+
+    <h1><%= name.ja %> - <%= name.en %></h1>
+
+    <section>
+        <ul>
+            <% affiliations.forEach(function(aff){ %>
+                <li><% aff.ja.forEach(function(text, index, array) { %>
+                        <%= text + (index === array.length - 1 ? "" : " ") %>
+                    <% }) %>
+                </li>
+            <% }) %>
+            <li>＜ここに連絡先が入ります＞</li>
+        </ul>
+    </section>
+
+    <h2>学歴</h2>
+    <ul>
+        <% education.forEach(function(edu) { %>
+            <li><%= edu.period.ja %> <%= edu.affiliation.ja %></li>
+        <% }) %>
+    </ul>
+
+    <h2>研究分野</h2>
+    <dl>
+        <% researches.forEach(function(res) { %>
+            <dt><%= res.title.ja %></dt>
+            <dd><%= res.detail.ja %></dd>
+        <% }) %>
+    </dl>
+
+    <h2>研究業績</h2>
+    <h3>国内会議発表</h3>
+    <% publications.domestic.forEach(function(pub) { %>
+        <li>
+            <p class="publication_title"><%= pub.title %></p>
+            <p class="publication_author"><%- yieldAuthorList(pub) %></p>
+            <p class="publication_conference"><%- yieldConference(pub) %></p>
+        </li>
+    <% }) %>
+
+    <h2>表彰等</h2>
+    <%- yieldAwardsHtml(awards) %>
+
+    <h2>職歴</h2>
+    <%- yieldWorksHtml(works) %>
+
+</main>
+</body>
+
+</html>

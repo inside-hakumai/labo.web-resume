@@ -1,6 +1,6 @@
 ### Added manually ###
 
-# Directories of gulp compilation result files
+# Directory of gulp compilation result files
 dist/
 contents.json
 
