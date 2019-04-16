@@ -1,3 +1,8 @@
+### Added manually ###
+
+# Directories of gulp compilation result files
+dist/
+contents.json
 
 # Created by https://www.gitignore.io/api/node
 # Edit at https://www.gitignore.io/?templates=node

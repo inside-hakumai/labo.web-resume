@@ -4,5 +4,20 @@
   "main": "index.js",
   "author": "inside-hakumai <inside.rice164@gmail.com>",
   "license": "MIT",
-  "private": false
+  "private": false,
+  "scripts": {
+    "build": "npx gulp"
+  },
+  "dependencies": {
+    "@types/gulp": "^4.0.6",
+    "@types/gulp-sass": "^0.0.31",
+    "gulp": "^4.0.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-typescript": "^5.0.1",
+    "rimraf": "^2.6.3",
+    "typescript": "^3.4.3"
+  },
+  "presets": [
+    "es2015"
+  ]
 }
