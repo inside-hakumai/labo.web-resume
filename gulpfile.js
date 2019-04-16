@@ -1,6 +1,7 @@
 const { src, dest, watch, task, series, parallel } = require('gulp');
 const sass = require("gulp-sass");
 const ts = require('gulp-typescript');
+const sourcemaps = require('gulp-sourcemaps');
 
 const rimraf = require('rimraf');
 
@@ -10,7 +11,9 @@ function clean(cb) {
 
 function css() {
   return src("src/stylesheets/style.scss")
+    .pipe(sourcemaps.init())
     .pipe(sass())
+    .pipe(sourcemaps.write())
     .pipe(dest("dist/css"));
 }
 
