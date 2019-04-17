@@ -17,7 +17,7 @@ function switchLang(lang: langType) {
    $(`#language-control button[data-lang='${lang}']`).addClass("button-active");
    $(`#language-control button[data-lang='${counterLang}']`).removeClass("button-active");
 
-   $('h1, h2').each(function() {
+   $('h1, h2, h3').each(function() {
       if ($(this).hasClass("active")) {
          const shuffleText = new ShuffleText(this);
          const output = $(this).attr(`data-${lang}-text`);
@@ -25,11 +25,33 @@ function switchLang(lang: langType) {
          shuffleText.start();
       }
    });
+
+   // todo 重複の排除
+   $('dt').each(function() {
+      const output = $(this).attr(`data-${lang}-text`)
+      if (output) {
+         const shuffleText = new ShuffleText(this);
+         shuffleText.setText(output);
+         shuffleText.start();
+
+      }
+   });
+
+   $('li, p, dd').each(function() {
+      const output = $(this).attr(`data-${lang}-text`)
+      if (output) {
+         const shuffleText = new ShuffleText(this);
+         shuffleText.setText(output);
+         shuffleText.duration = 1000;
+         shuffleText.start();
+
+      }
+   });
 }
 
 $(() => {
 
-   $('h1, h2').on('inview', function (event, isInView) {
+   $('h1, h2, h3').on('inview', function (event, isInView) {
       if (isInView && !$(this).hasClass("active")) {
             const shuffleText = new ShuffleText(this);
             const targetLang = currentLang;
