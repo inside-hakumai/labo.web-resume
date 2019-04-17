@@ -26,6 +26,7 @@ dd {
 
 h1, h2 {
   opacity: 0;
+  overflow: hidden;
 
   &.active {
     opacity: 1;
@@ -91,6 +92,49 @@ div.row {
 body {
   font-family: 'Noto Sans JP', sans-serif;
   width: 100%;
+
+  header {
+    div#switch-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 400px;
+      height: 30px;
+      padding-top: 10px;
+      padding-left: 40px;
+      padding-bottom: 10px;
+      background: black;
+      z-index: 10;
+
+      span.switch-label {
+        color: #FFFFFF;
+        padding-right: 10px;
+      }
+
+      div.segmented-control {
+        display: inline-block;
+        position: relative;
+
+        button.uk-button.uk-button-small {
+          background: black;
+          color: white;
+          border: 1px solid white;
+          width: 100px;
+
+          &.button-active {
+            background: #ffffff;
+            color: black;
+          }
+
+          &:nth-child(2) {
+            position: absolute;;
+            top: 0;
+            left: 100px;
+          }
+        }
+      }
+    }
+  }
 
   main {
     margin-top: 100px;

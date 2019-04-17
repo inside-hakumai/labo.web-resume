@@ -72,19 +72,23 @@ function yieldWorksHtml(works) {
 <body>
 <header>
     <div id="switch-wrapper">
-
+        <span class="switch-label">Language</span>
+        <div id="language-control" class="segmented-control">
+            <button data-lang="ja" class="uk-button button-active uk-button-small">Japanese</button>
+            <button data-lang="en" class="uk-button button-inactive uk-button-small">English</button>
+        </div>
     </div>
 </header>
 
 <main class="uk-container uk-container-expand">
     
     <section id="title-wrapper" class="component-wrapper">
-        <h1 data-ja-text="<%= name.ja %>"><%= name.ja %></h1>
+        <h1 data-ja-text="<%= name.ja %>" data-en-text="<%= name.en %>"><%= name.ja %></h1>
     </section>
 
     <div class="row double">
         <section class="component-wrapper">
-            <h2 data-ja-text="所属">所属</h2>
+            <h2 data-ja-text="所属" data-en-text="Affiliation">所属</h2>
             <ul>
                 <% affiliations.forEach(function(aff){ %>
                     <li><% aff.ja.forEach(function(text, index, array) { %>
@@ -96,7 +100,7 @@ function yieldWorksHtml(works) {
         </section>
 
         <section id="contact" class="component-wrapper">
-            <h2 data-ja-text="連絡先">連絡先</h2>
+            <h2 data-ja-text="連絡先" data-en-text="Contact">連絡先</h2>
             <ul>
                 <li>＜ここに連絡先が入ります＞</li> <!-- todo 連絡先の画像を挿入 -->
                 <li class="github_link"><a href="<%= contact.github %>" target="_blank"><img src="./images/github.png" alt="GitHub"></a></li>
@@ -106,7 +110,7 @@ function yieldWorksHtml(works) {
 
     <div class="row single">
         <section class="component-wrapper">
-            <h2 data-ja-text="学歴">学歴</h2>
+            <h2 data-ja-text="学歴" data-en-text="Education">学歴</h2>
             <ul>
                 <% education.forEach(function(edu) { %>
                     <li><%= edu.period.ja %> <%= edu.affiliation.ja %></li>
@@ -117,7 +121,7 @@ function yieldWorksHtml(works) {
 
     <div class="row single right">
         <section class="component-wrapper">
-            <h2 data-ja-text="研究分野">研究分野</h2>
+            <h2 data-ja-text="研究分野" data-en-text="Research Interests">研究分野</h2>
             <dl>
                 <% researches.forEach(function(res) { %>
                     <dt><%= res.title.ja %></dt>
@@ -129,7 +133,7 @@ function yieldWorksHtml(works) {
 
     <div class="row single">
         <section id="publication" class="component-wrapper">
-            <h2 data-ja-text="研究業績">研究業績</h2>
+            <h2 data-ja-text="研究業績" data-en-text="Publications">研究業績</h2>
             <h3>国内会議発表</h3>
             <dl>
                 <% publications.domestic.forEach(function(pub) { %>
@@ -145,14 +149,14 @@ function yieldWorksHtml(works) {
 
     <div class="row single right">
         <section class="component-wrapper">
-            <h2 data-ja-text="表彰等">表彰等</h2>
+            <h2 data-ja-text="表彰等" data-en-text="Awards">表彰等</h2>
             <%- yieldAwardsHtml(awards) %>
         </section>
     </div>
 
     <div class="row single">
         <section class="component-wrapper">
-            <h2 data-ja-text="職歴">職歴</h2>
+            <h2 data-ja-text="職歴" data-en-text="Work Experiences">職歴</h2>
             <%- yieldWorksHtml(works) %>
         </section>
     </div>
