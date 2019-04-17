@@ -55,7 +55,7 @@ function image(cb) {
   src([
     'src/images/*'
   ])
-    .pipe(dest("dist/images"));
+    .pipe(dest("dist/img"));
   cb();
 }
 
