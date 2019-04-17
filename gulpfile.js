@@ -47,6 +47,14 @@ function lib_js(cb) {
   cb();
 }
 
+function image(cb) {
+  src([
+    'src/images/*'
+  ])
+    .pipe(dest("dist/images"));
+  cb();
+}
+
 function html(cb) {
   src('src/index.ejs')
     .pipe(ejs(contents, {rmWhitespace: true}, {ext: '.html'}))
@@ -57,9 +65,11 @@ function html(cb) {
 // exports.js = js;
 // exports.css = css;
 exports.lib_css = lib_css;
+exports.lib_js = lib_js;
+exports.image = image;
 exports.html = html;
 
-const build = parallel(/*css, js, */lib_css, lib_js, html);
+const build = parallel(/*css, js, */lib_css, lib_js, image, html);
 
 task('watch', function() {
   watch(
