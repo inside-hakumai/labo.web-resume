@@ -13,24 +13,39 @@ function clean(cb) {
   rimraf('./dist', cb);
 }
 
-// function css() {
-//   return src("src/stylesheets/style.scss")
+// function css(cb) {
+//   src("src/stylesheets/style.scss")
 //     .pipe(sourcemaps.init())
 //     .pipe(sass())
 //     .pipe(sourcemaps.write())
-//     .pipe(dest("dist/css"));
+//     .pipe(dest("css"));
+//   cb();
 // }
 
-function lib_css() {
-  return src("node_modules/normalize.css/normalize.css")
+function lib_css(cb) {
+  src([
+    "node_modules/normalize.css/normalize.css",
+    'node_modules/uikit/dist/css/uikit.css',
+    ])
     .pipe(dest("dist/css"));
+  cb();
 }
 
-// function js() {
-//   return src('src/scripts/main.ts', { sourcemaps: true })
+// function js(cb) {
+//   src('src/scripts/main.ts', {sourcemaps: true})
 //     .pipe(ts())
-//     .pipe(dest('dist/js'));
+//     .pipe(dest('js'));
+//   cb();
 // }
+
+function lib_js(cb) {
+  src([
+    'node_modules/uikit/dist/js/uikit.js',
+    'node_modules/uikit/dist/js/uikit-icons.js',
+  ])
+    .pipe(dest("dist/js"));
+  cb();
+}
 
 function html(cb) {
   src('src/index.ejs')
@@ -44,7 +59,7 @@ function html(cb) {
 exports.lib_css = lib_css;
 exports.html = html;
 
-const build = parallel(/*css, js, */lib_css, html);
+const build = parallel(/*css, js, */lib_css, lib_js, html);
 
 task('watch', function() {
   watch(
