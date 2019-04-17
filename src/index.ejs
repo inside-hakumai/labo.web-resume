@@ -17,9 +17,6 @@ function yieldAuthorList(publication) {
 
 function yieldConference(publication) {
     var resultStr = publication.conference;
-    if (publication.award) {
-        resultStr += ` <span class="award">(${publication.award})</span>`;
-    }
     return resultStr;
 }
 
@@ -46,15 +43,14 @@ function yieldWorksHtml(works) {
         resultStr += `<h3>${workTypeEntry.type.ja}</h3>`;
 
         if (workTypeEntry.entries && workTypeEntry.entries.length !== 0) {
-            resultStr += "<ul>";
+            resultStr += "<dl>";
 
             workTypeEntry.entries.forEach(function(workEntry) {
-                resultStr += "<li>";
-                resultStr += `<span class="job_title">${workEntry.title}</span> ${workEntry.detail}`;
-                resultStr += "</li>";
+                resultStr += `<dt>${workEntry.title}</dt>`;
+                resultStr += `<dd>${workEntry.detail}</dd>`;
             });
 
-            resultStr += "</ul>";
+            resultStr += "</dl>";
         }
     });
 
@@ -66,59 +62,103 @@ function yieldWorksHtml(works) {
 
 <head>
     <title><%= name.ja %> - <%= name.en %></title>
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP:400,500,700,900&amp;subset=japanese" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Sawarabi+Mincho" rel="stylesheet">
     <link rel="stylesheet" href="./css/normalize.css">
+    <link rel="stylesheet" href="./css/uikit.css">
     <link rel="stylesheet" href="./css/style.css">
 </head>
 
 <body>
-<main>
-
-    <h1><%= name.ja %> - <%= name.en %></h1>
-
-    <section>
-        <ul>
-            <% affiliations.forEach(function(aff){ %>
-                <li><% aff.ja.forEach(function(text, index, array) { %>
-                        <%= text + (index === array.length - 1 ? "" : " ") %>
-                    <% }) %>
-                </li>
-            <% }) %>
-            <li>＜ここに連絡先が入ります＞</li>
-        </ul>
+<main class="uk-container uk-container-expand">
+    
+    <section id="title-wrapper" class="component-wrapper">
+        <h1><%= name.ja%></h1>
     </section>
 
-    <h2>学歴</h2>
-    <ul>
-        <% education.forEach(function(edu) { %>
-            <li><%= edu.period.ja %> <%= edu.affiliation.ja %></li>
-        <% }) %>
-    </ul>
+    <div class="row double">
+        <section class="component-wrapper">
+            <h2>所属</h2>
+            <ul>
+                <% affiliations.forEach(function(aff){ %>
+                    <li><% aff.ja.forEach(function(text, index, array) { %>
+                            <%- text + (index === array.length - 1 ? "" : "<br>") %>
+                        <% }) %>
+                    </li>
+                <% }) %>
+            </ul>
+        </section>
 
-    <h2>研究分野</h2>
-    <dl>
-        <% researches.forEach(function(res) { %>
-            <dt><%= res.title.ja %></dt>
-            <dd><%= res.detail.ja %></dd>
-        <% }) %>
-    </dl>
+        <section id="contact" class="component-wrapper">
+            <h2>連絡先</h2>
+            <ul>
+                <li>＜ここに連絡先が入ります＞</li> <!-- todo 連絡先の画像を挿入 -->
+                <li class="github_link"><a href="<%= contact.github %>" target="_blank"><img src="./images/github.png" alt="GitHub"></a></li>
+            </ul>
+        </section>
+    </div>
 
-    <h2>研究業績</h2>
-    <h3>国内会議発表</h3>
-    <% publications.domestic.forEach(function(pub) { %>
-        <li>
-            <p class="publication_title"><%= pub.title %></p>
-            <p class="publication_author"><%- yieldAuthorList(pub) %></p>
-            <p class="publication_conference"><%- yieldConference(pub) %></p>
-        </li>
-    <% }) %>
+    <div class="row single">
+        <section class="component-wrapper">
+            <h2>学歴</h2>
+            <ul>
+                <% education.forEach(function(edu) { %>
+                    <li><%= edu.period.ja %> <%= edu.affiliation.ja %></li>
+                <% }) %>
+            </ul>
+        </section>
+    </div>
 
-    <h2>表彰等</h2>
-    <%- yieldAwardsHtml(awards) %>
+    <div class="row single right">
+        <section class="component-wrapper">
+            <h2>研究分野</h2>
+            <dl>
+                <% researches.forEach(function(res) { %>
+                    <dt><%= res.title.ja %></dt>
+                    <dd><%= res.detail.ja %></dd>
+                <% }) %>
+            </dl>
+        </section>
+    </div>
 
-    <h2>職歴</h2>
-    <%- yieldWorksHtml(works) %>
+    <div class="row single">
+        <section id="publication" class="component-wrapper">
+            <h2>研究業績</h2>
+            <h3>国内会議発表</h3>
+            <dl>
+                <% publications.domestic.forEach(function(pub) { %>
+                    <dt><%= pub.title %><%- pub.award ? `<span class="award">${pub.award}</span>` : "" %></dt>
+                    <dd>
+                        <p class="publication_author"><%- yieldAuthorList(pub) %></p>
+                        <p class="publication_conference"><%- yieldConference(pub) %></p>
+                    </dd>
+                <% }) %>
+            </dl>
+        </section>
+    </div>
+
+    <div class="row single right">
+        <section class="component-wrapper">
+            <h2>表彰等</h2>
+            <%- yieldAwardsHtml(awards) %>
+        </section>
+    </div>
+
+    <div class="row single">
+        <section class="component-wrapper">
+            <h2>職歴</h2>
+            <%- yieldWorksHtml(works) %>
+        </section>
+    </div>
 
 </main>
+
+<footer>
+    <div id="grid">
+        <div class="grid-horizontal"></div>
+        <div class="grid-vertical"></div>
+    </div>
+</footer>
 </body>
 
 </html>

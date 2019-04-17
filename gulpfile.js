@@ -13,14 +13,14 @@ function clean(cb) {
   rimraf('./dist', cb);
 }
 
-// function css(cb) {
-//   src("src/stylesheets/style.scss")
-//     .pipe(sourcemaps.init())
-//     .pipe(sass())
-//     .pipe(sourcemaps.write())
-//     .pipe(dest("css"));
-//   cb();
-// }
+function css(cb) {
+  src("src/stylesheets/style.scss")
+    .pipe(sourcemaps.init())
+    .pipe(sass())
+    .pipe(sourcemaps.write())
+    .pipe(dest("dist/css"));
+  cb();
+}
 
 function lib_css(cb) {
   src([
@@ -62,14 +62,14 @@ function html(cb) {
   cb();
 }
 
+exports.css = css;
 // exports.js = js;
-// exports.css = css;
 exports.lib_css = lib_css;
 exports.lib_js = lib_js;
 exports.image = image;
 exports.html = html;
 
-const build = parallel(/*css, js, */lib_css, lib_js, image, html);
+const build = parallel(css, /*js, */lib_css, lib_js, image, html);
 
 task('watch', function() {
   watch(
