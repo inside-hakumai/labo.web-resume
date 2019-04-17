@@ -24,6 +24,14 @@ dd {
   }
 }
 
+h1, h2 {
+  opacity: 0;
+
+  &.active {
+    opacity: 1;
+  }
+}
+
 section.component-wrapper {
   position: relative;
   margin-top: 100px;

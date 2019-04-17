@@ -70,15 +70,21 @@ function yieldWorksHtml(works) {
 </head>
 
 <body>
+<header>
+    <div id="switch-wrapper">
+
+    </div>
+</header>
+
 <main class="uk-container uk-container-expand">
     
     <section id="title-wrapper" class="component-wrapper">
-        <h1><%= name.ja%></h1>
+        <h1 data-ja-text="<%= name.ja %>"><%= name.ja %></h1>
     </section>
 
     <div class="row double">
         <section class="component-wrapper">
-            <h2>所属</h2>
+            <h2 data-ja-text="所属">所属</h2>
             <ul>
                 <% affiliations.forEach(function(aff){ %>
                     <li><% aff.ja.forEach(function(text, index, array) { %>
@@ -90,7 +96,7 @@ function yieldWorksHtml(works) {
         </section>
 
         <section id="contact" class="component-wrapper">
-            <h2>連絡先</h2>
+            <h2 data-ja-text="連絡先">連絡先</h2>
             <ul>
                 <li>＜ここに連絡先が入ります＞</li> <!-- todo 連絡先の画像を挿入 -->
                 <li class="github_link"><a href="<%= contact.github %>" target="_blank"><img src="./images/github.png" alt="GitHub"></a></li>
@@ -100,7 +106,7 @@ function yieldWorksHtml(works) {
 
     <div class="row single">
         <section class="component-wrapper">
-            <h2>学歴</h2>
+            <h2 data-ja-text="学歴">学歴</h2>
             <ul>
                 <% education.forEach(function(edu) { %>
                     <li><%= edu.period.ja %> <%= edu.affiliation.ja %></li>
@@ -111,7 +117,7 @@ function yieldWorksHtml(works) {
 
     <div class="row single right">
         <section class="component-wrapper">
-            <h2>研究分野</h2>
+            <h2 data-ja-text="研究分野">研究分野</h2>
             <dl>
                 <% researches.forEach(function(res) { %>
                     <dt><%= res.title.ja %></dt>
@@ -123,7 +129,7 @@ function yieldWorksHtml(works) {
 
     <div class="row single">
         <section id="publication" class="component-wrapper">
-            <h2>研究業績</h2>
+            <h2 data-ja-text="研究業績">研究業績</h2>
             <h3>国内会議発表</h3>
             <dl>
                 <% publications.domestic.forEach(function(pub) { %>
@@ -139,14 +145,14 @@ function yieldWorksHtml(works) {
 
     <div class="row single right">
         <section class="component-wrapper">
-            <h2>表彰等</h2>
+            <h2 data-ja-text="表彰等">表彰等</h2>
             <%- yieldAwardsHtml(awards) %>
         </section>
     </div>
 
     <div class="row single">
         <section class="component-wrapper">
-            <h2>職歴</h2>
+            <h2 data-ja-text="職歴">職歴</h2>
             <%- yieldWorksHtml(works) %>
         </section>
     </div>
@@ -159,6 +165,8 @@ function yieldWorksHtml(works) {
         <div class="grid-vertical"></div>
     </div>
 </footer>
+
+<script src="js/bundle.js"></script>
 </body>
 
 </html>

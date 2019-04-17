@@ -43,13 +43,13 @@ function js(cb) {
   cb();
 }
 
-function lib_js(cb) {
-  src([
-    'src/scripts/jquery.shuffleLetters.js'
-  ])
-    .pipe(dest("dist/js"));
-  cb();
-}
+// function lib_js(cb) {
+//   src([
+//     'src/scripts/jquery.shuffleLetters.js'
+//   ])
+//     .pipe(dest("js"));
+//   cb();
+// }
 
 function image(cb) {
   src([
@@ -69,11 +69,11 @@ function html(cb) {
 exports.css = css;
 exports.js = js;
 exports.lib_css = lib_css;
-exports.lib_js = lib_js;
+// exports.lib_js = lib_js;
 exports.image = image;
 exports.html = html;
 
-const build = parallel(css, js, lib_css, lib_js, image, html);
+const build = parallel(css, js, lib_css, /*lib_js, */image, html);
 
 task('watch', function() {
   watch(
