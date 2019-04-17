@@ -7,6 +7,12 @@ const sourcemaps = require('gulp-sourcemaps');
 
 const rimraf = require('rimraf');
 
+const webpackStream = require("webpack-stream");
+const webpack = require("webpack");
+const webpackConfig = require("./webpack.config");
+
+const tsProject = ts.createProject('tsconfig.json');
+
 const contents = JSON.parse(fs.readFileSync('./contents.json', 'utf8'));
 
 function clean(cb) {
@@ -31,17 +37,15 @@ function lib_css(cb) {
   cb();
 }
 
-// function js(cb) {
-//   src('src/scripts/main.ts', {sourcemaps: true})
-//     .pipe(ts())
-//     .pipe(dest('js'));
-//   cb();
-// }
+function js(cb) {
+  webpackStream(webpackConfig, webpack)
+    .pipe(dest('dist/js'));
+  cb();
+}
 
 function lib_js(cb) {
   src([
-    'node_modules/uikit/dist/js/uikit.js',
-    'node_modules/uikit/dist/js/uikit-icons.js',
+    'src/scripts/jquery.shuffleLetters.js'
   ])
     .pipe(dest("dist/js"));
   cb();
@@ -63,13 +67,13 @@ function html(cb) {
 }
 
 exports.css = css;
-// exports.js = js;
+exports.js = js;
 exports.lib_css = lib_css;
 exports.lib_js = lib_js;
 exports.image = image;
 exports.html = html;
 
-const build = parallel(css, /*js, */lib_css, lib_js, image, html);
+const build = parallel(css, js, lib_css, lib_js, image, html);
 
 task('watch', function() {
   watch(
