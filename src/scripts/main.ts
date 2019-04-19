@@ -1,6 +1,8 @@
 import $ from "jquery";
 import ShuffleText from "shuffle-text";
 
+import anime from 'animejs';
+
 import UIkit from 'uikit';
 import Icons from 'uikit/dist/js/uikit-icons';
 UIkit.use(Icons);
@@ -49,21 +51,29 @@ function switchLang(lang: langType) {
    });
 }
 
+function appearWithShuffleEffect(targetDom: HTMLElement) {
+   if ($(targetDom).hasClass("active")) return ;
+
+   const shuffleText = new ShuffleText(targetDom);
+   const targetLang = currentLang;
+   const output = $(targetDom).attr(`data-${targetLang}-text`);
+
+   if (output) {
+      $(targetDom).text("　").addClass("active");
+      shuffleText.setText("     " + output + "     ");
+      shuffleText.start();
+   } else {
+      throw Error(`Attribute "data-${targetLang}-text" is not defined`);
+   }
+}
+
 $(() => {
 
-   $('h1, h2, h3').on('inview', function (event, isInView) {
-      if (isInView && !$(this).hasClass("active")) {
-            const shuffleText = new ShuffleText(this);
-            const targetLang = currentLang;
-            const output = $(this).attr(`data-${targetLang}-text`);
+   $('.component-wrapper').prepend('<div class="frame-fastspin"></div><div class="frame-slowspin"></div>');
 
-            if (output) {
-               $(this).text("　").addClass("active");
-               shuffleText.setText("     " + output + "     ");
-               shuffleText.start();
-            } else {
-               throw Error(`Attribute "data-${targetLang}-text" is not defined`);
-            }
+   $('h2, h3').on('inview', function (event, isInView) {
+      if (isInView) {
+         appearWithShuffleEffect(this);
       } else {
          // do nothing
       }
@@ -82,6 +92,45 @@ $(() => {
             throw Error('Attribute "data-lang" is not defined');
          }
       }
-   })
+   });
+
+   anime.timeline({})
+      .add({
+         targets: 'section.animated div.frame-fastspin',
+         rotate: 720,
+         duration: 4000,
+         easing: 'linear',
+      }, 0)
+      .add({
+         targets: 'section.animated div.frame-slowspin',
+         rotate: 360,
+         duration: 4000,
+         easing: 'linear',
+         changeComplete: function(anim) {
+            setTimeout(() => {
+               appearWithShuffleEffect($('h1')[0]);
+            }, 250);
+         }
+      }, 0)
+      .add({
+         targets: 'section.animated div.frame-fastspin',
+         width: 590,
+         height: 190,
+         right: '9px',
+         bottom: '9px',
+         duration: 500,
+         easing: 'easeOutQuint'
+      }, 4000)
+      .add({
+         targets: 'section.animated div.frame-slowspin',
+         width: 590,
+         height: 190,
+         top: '8px',
+         left: '8px',
+         margin: 'auto',
+         duration: 500,
+         easing: 'easeOutQuint'
+      }, 4100);
+
 
 });

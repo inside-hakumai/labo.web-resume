@@ -45,24 +45,35 @@ section.component-wrapper {
   padding: 50px;
   background-color: #ffffffc9;
 
-  &:before, &:after {
-    display: block;
-    content: "";
+  div.frame-fastspin, div.frame-slowspin {
     width: calc(100% - 10px);
     height: calc(100% - 10px);
     position: absolute;
     border: 1px solid black;
     pointer-events: none;
+
   }
 
-  &:before {
+  div.frame-fastspin {
     top: 0;
     left: 0;
   }
 
-  &:after {
+  div.frame-slowspin {
     bottom: 0;
     right: 0;
+  }
+
+  &.animated {
+    div.frame-fastspin, div.frame-slowspin {
+      width: 50px;
+      height: 50px;
+      margin: auto;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
   }
 
   h2 {
