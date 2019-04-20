@@ -190,7 +190,7 @@ async function executeAppearingAnimation(wrapperDom: HTMLElement) {
                   // 種類がテキストノードでかつ，改行コードや空白を除いたテキスト長が0で無い場合（何かしらの自然言語を含んでいる場合）
                   const childNodeText = childNodes[k].textContent;
                   if (childNodes[k].nodeType === Node.TEXT_NODE && childNodeText !== null && childNodeText.trim().length !== 0) {
-                     console.debug(childNodes);
+                     // console.debug(childNodes);
                      effectPromises.push(appearWithShuffleEffect(nodes[i]));
                      break;
                   }
