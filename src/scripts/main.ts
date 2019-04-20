@@ -300,7 +300,7 @@ $(async () => {
 let isAlreadyLoaded = false;
 $(window).on('load', function() {
    isAlreadyLoaded = true;
-   $('header, #grid').addClass('active');
+   $('header, #grid, #scroll-down').addClass('active');
 
    timeOnLoad = performance.now();
    const timeOnLoadFromReady = timeOnLoad - (timeOnReady || 0);
