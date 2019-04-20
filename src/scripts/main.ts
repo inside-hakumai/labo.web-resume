@@ -58,6 +58,7 @@ function switchLang(lang: langType) {
       if (output) {
          const shuffleText = new ShuffleText(this);
          shuffleText.setText(output);
+         shuffleText.duration = 400;
          shuffleText.start();
 
       }
@@ -68,7 +69,7 @@ function switchLang(lang: langType) {
       if (output) {
          const shuffleText = new ShuffleText(this);
          shuffleText.setText(output);
-         shuffleText.duration = 1200;
+         shuffleText.duration = 800;
          shuffleText.start();
 
       }
@@ -92,7 +93,7 @@ async function appearWithShuffleEffect(targetDom: HTMLElement): Promise<void> {
       if (output) {
          $(targetDom).addClass("active");
          shuffleText.setText("     " + output + "     ");
-         shuffleText.duration = targetDom.tagName === "H2" ? 600 : 1200;
+         shuffleText.duration = targetDom.tagName === "H2" ? 400 : 800;
          shuffleText.start();
          setTimeout(resolve, shuffleText.duration);
       } else {
@@ -101,7 +102,7 @@ async function appearWithShuffleEffect(targetDom: HTMLElement): Promise<void> {
    }));
 }
 
-async function spin(wrapperDom: HTMLElement): Promise<void> {
+async function spin(wrapperDom: HTMLElement, duration:number = 2000): Promise<void> {
 
    if (!$(wrapperDom).hasClass('component-wrapper') || !$(wrapperDom).attr('id')) {
       throw Error('Animation target node must have id and "component-wrapper" class');
@@ -113,16 +114,18 @@ async function spin(wrapperDom: HTMLElement): Promise<void> {
       anime.timeline({})
          .add({
             targets: `#${wrapperDomId} div.frame-fastspin`,
-            rotate: [0, 360],
-            duration: 2000,
+            rotate: [0, 360*duration/2000],
+            duration: duration,
             easing: 'linear',
          }, 0)
          .add({
             targets: `#${wrapperDomId} div.frame-slowspin`,
-            rotate: [0, 180],
-            duration: 2000,
+            rotate: [0, 180*duration/2000],
+            duration: duration,
             easing: 'linear',
             changeComplete: () => {
+               $(`#${wrapperDomId} div.frame-fastspin`).css('transform', 'rotate(0deg)');
+               $(`#${wrapperDomId} div.frame-slowspin`).css('transform', 'rotate(0deg)');
                console.debug(`Complete frame spin of `, wrapperDom, `. 'load' event => ${isAlreadyLoaded}`);
                resolve();
             }
@@ -146,7 +149,7 @@ async function executeAppearingAnimation(wrapperDom: HTMLElement) {
 
    $(wrapperDom).addClass('on-animation');
 
-   await spin(wrapperDom);
+   await spin(wrapperDom, 1000);
 
    $(wrapperDom).addClass('active');
 
