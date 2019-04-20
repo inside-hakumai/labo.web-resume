@@ -43,7 +43,6 @@ section.component-wrapper {
   margin-top: 100px;
   margin-bottom: 100px;
   padding: 50px;
-  background-color: #ffffffc9;
 
   div.frame-fastspin, div.frame-slowspin {
     width: calc(100% - 10px);
@@ -51,7 +50,7 @@ section.component-wrapper {
     position: absolute;
     border: 1px solid black;
     pointer-events: none;
-
+    transition: background-color .5s linear;
   }
 
   div.frame-fastspin {
@@ -79,6 +78,10 @@ section.component-wrapper {
   h2 {
     font-family: "Sawarabi Mincho", sans-serif;
     margin-top: 0;
+  }
+
+  &.active {
+    background-color: #ffffffc9;
   }
 }
 

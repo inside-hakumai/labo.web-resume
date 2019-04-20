@@ -148,6 +148,7 @@ async function executeAppearingAnimation(wrapperDom: HTMLElement) {
 
    await spin(wrapperDom);
 
+   $(wrapperDom).addClass('active');
 
    return Promise.all(
       [
@@ -222,6 +223,8 @@ async function executeTitleComponentAnimation() {
 
    const titleDomWidth = ensureNotUndefinedOrNull($("#title-wrapper").outerWidth());
    const titleDomHeight = ensureNotUndefinedOrNull($("#title-wrapper").outerHeight());
+
+   $('#title-wrapper').addClass('active');
 
    return Promise.all(
       [
