@@ -101,10 +101,13 @@ function yieldWorksHtml(works) {
 </header>
 
 <main class="uk-container uk-container-expand animated">
-    
-    <section id="title-wrapper" class="component-wrapper">
-        <h1 data-ja-text="<%= name.ja %>" data-en-text="<%= name.en %>"><%= name.ja %></h1>
-    </section>
+
+    <div id="branding-wrapper">
+        <section id="title-wrapper" class="component-wrapper">
+            <h1 data-ja-text="<%= name.ja %>" data-en-text="<%= name.en %>"><%= name.ja %></h1>
+        </section>
+        <div id="scroll-down"></div>
+    </div>
 
     <div class="row double">
         <section id="affiliation" class="component-wrapper">

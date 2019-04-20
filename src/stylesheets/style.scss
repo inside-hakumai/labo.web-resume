@@ -164,40 +164,79 @@ body {
   }
 
   main {
-    margin-top: 100px;
+    margin-top: 0;
 
-    section#title-wrapper {
-      width: 500px;
-      height: 100px;
-      margin-left: auto;
-      margin-right: auto;
+    div#branding-wrapper {
+      width: 100%;
+      height: 100vh;
+      min-height: 500px;
+      padding-top: calc(50vh - 100px);
+      box-sizing: border-box;
+      position: relative;
 
-
-      h1 {
-        font-family: "Sawarabi Mincho", sans-serif;
+      section#title-wrapper {
         width: 500px;
         height: 100px;
-        line-height: 100px;
-        text-align: center;
+        margin: 0 auto;
+
+        h1 {
+          font-family: "Sawarabi Mincho", sans-serif;
+          width: 500px;
+          height: 100px;
+          line-height: 100px;
+          text-align: center;
+          margin: auto;
+
+          &:before, &:after {
+            display: block;
+            content: "";
+            width: 8px;
+            height: 8px;
+            position: absolute;
+            background: black;
+          }
+
+          &:before {
+            top: 0;
+            right: 0;
+          }
+
+          &:after {
+            bottom: 0;
+            left: 0;
+          }
+        }
+      }
+
+      div#scroll-down {
+        position: absolute;
+        background: url("../img/chevron-down.svg") no-repeat center;
+        width: 50px;
+        height: 50px;
+        bottom: 50px;
+        left: 0;
+        right: 0;
         margin: auto;
+        animation: updown 0.5s ease-in-out infinite;
+        animation-direction: alternate;
+        z-index: 1;
 
-        &:before, &:after {
-          display: block;
-          content: "";
-          width: 8px;
-          height: 8px;
-          position: absolute;
-          background: black;
-        }
-
-        &:before {
-          top: 0;
-          right: 0;
-        }
 
         &:after {
-          bottom: 0;
-          left: 0;
+          display: block;
+          content: "Scroll";
+          padding-top: 40px;
+          text-align: center;
+          color: #000000;
+        }
+
+        @-webkit-keyframes updown {
+          from {bottom: 50px;}
+          to {bottom: 30px;}
+        }
+        @keyframes updown {
+          from {bottom: 50px;}
+          to {bottom: 30px;}
         }
       }
     }
