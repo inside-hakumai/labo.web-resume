@@ -8,7 +8,7 @@ let config = {
   },
   output: {
     path: __dirname + "/js",
-      filename: 'bundle.js'
+    filename: 'bundle.js'
   },
   mode: 'development',
   devtool: 'source-map',

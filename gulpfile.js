@@ -23,6 +23,10 @@ function css(cb) {
   src("src/stylesheets/style.scss")
     .pipe(sourcemaps.init())
     .pipe(sass())
+    .on('error', function(err) {
+      console.error(err);
+      this.emit('end');
+    })
     .pipe(sourcemaps.write())
     .pipe(dest("dist/css"));
   cb();
@@ -39,6 +43,10 @@ function lib_css(cb) {
 
 function js(cb) {
   webpackStream(webpackConfig, webpack)
+    .on('error', function(err) {
+      console.error(err);
+      this.emit('end');
+    })
     .pipe(dest('dist/js'));
   cb();
 }
