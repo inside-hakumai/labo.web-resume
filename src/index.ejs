@@ -47,8 +47,8 @@ function yieldAwardsHtml(awards) {
         resultStr += "<dl>";
 
         awards.forEach(function(entry) {
-            resultStr += `<dt>${entry.scene}</dt>`;
-            resultStr += `<dd>${entry.award}</dd>`;
+            resultStr += `<dt data-ja-text="${entry.scene}" data-en-text="${entry.scene}">${entry.scene}</dt>`;
+            resultStr += `<dd data-ja-text="${entry.award}" data-en-text="${entry.award}">${entry.award}</dd>`;
         });
 
         resultStr += "</dl>";
@@ -66,8 +66,8 @@ function yieldWorksHtml(works) {
             resultStr += "<dl>";
 
             workTypeEntry.entries.forEach(function(workEntry) {
-                resultStr += `<dt>${workEntry.title}</dt>`;
-                resultStr += `<dd>${workEntry.detail}</dd>`;
+                resultStr += `<dt data-ja-text="${workEntry.title}" data-en-text="${workEntry.title}">${workEntry.title}</dt>`;
+                resultStr += `<dd data-ja-text="${workEntry.detail}" data-en-text="${workEntry.detail}">${workEntry.detail}</dd>`;
             });
 
             resultStr += "</dl>";
@@ -100,14 +100,14 @@ function yieldWorksHtml(works) {
     </div>
 </header>
 
-<main class="uk-container uk-container-expand">
+<main class="uk-container uk-container-expand animated">
     
-    <section id="title-wrapper" class="component-wrapper animated">
+    <section id="title-wrapper" class="component-wrapper">
         <h1 data-ja-text="<%= name.ja %>" data-en-text="<%= name.en %>"><%= name.ja %></h1>
     </section>
 
     <div class="row double">
-        <section class="component-wrapper">
+        <section id="affiliation" class="component-wrapper">
             <h2 data-ja-text="所属" data-en-text="Affiliation">所属</h2>
             <ul>
                 <% affiliations.forEach(function(aff){ %>
@@ -119,26 +119,26 @@ function yieldWorksHtml(works) {
         <section id="contact" class="component-wrapper">
             <h2 data-ja-text="連絡先" data-en-text="Contact">連絡先</h2>
             <ul>
-                <li><%= contact.email %></li> <!-- todo 連絡先の画像を挿入 -->
-                <li class="github_link"><a href="https://github.com/inside-hakumai" target="_blank"><img src="./img/github.png" alt="GitHub"></a></li>
+                <li><p><%= contact.email %></p></li> <!-- todo 連絡先の画像を挿入 -->
+                <li class="github_link"><p><a href="https://github.com/inside-hakumai" target="_blank"><img src="./img/github.png" alt="GitHub"></a></p></li>
             </ul>
         </section>
     </div>
 
     <div class="row single">
-        <section class="component-wrapper">
+        <section id="education" class="component-wrapper">
             <h2 data-ja-text="学歴" data-en-text="Education">学歴</h2>
             <dl>
                 <% education.forEach(function(edu) { %>
-                    <dt><%= edu.period.ja %></dt>
-                    <dd><%= edu.affiliation.ja %></dd>
+                    <dt data-ja-text="<%= edu.period.ja %>" data-en-text="<%=edu.period.en %>"><%= edu.period.ja %></dt>
+                    <dd data-ja-text="<%= edu.affiliation.ja %>" data-en-text="<%=edu.affiliation.en %>"><%= edu.affiliation.ja %></dd>
                 <% }) %>
             </dl>
         </section>
     </div>
 
     <div class="row single right">
-        <section class="component-wrapper">
+        <section id="research" class="component-wrapper">
             <h2 data-ja-text="研究分野" data-en-text="Research Interests">研究分野</h2>
             <dl>
                 <% researches.forEach(function(res) { %>
@@ -166,14 +166,14 @@ function yieldWorksHtml(works) {
     </div>
 
     <div class="row single right">
-        <section class="component-wrapper">
+        <section id="awards" class="component-wrapper">
             <h2 data-ja-text="表彰等" data-en-text="Awards">表彰等</h2>
             <%- yieldAwardsHtml(awards) %>
         </section>
     </div>
 
     <div class="row single">
-        <section class="component-wrapper">
+        <section id="works" class="component-wrapper">
             <h2 data-ja-text="職歴" data-en-text="Work Experiences">職歴</h2>
             <%- yieldWorksHtml(works) %>
         </section>
