@@ -111,6 +111,9 @@ body {
   width: 100%;
 
   header {
+    opacity: 0;
+    transition: opacity linear .5s;
+
     div#switch-wrapper {
       position: fixed;
       top: 0;
@@ -150,6 +153,10 @@ body {
           }
         }
       }
+    }
+
+    &.active {
+      opacity: 1;
     }
   }
 
@@ -258,7 +265,9 @@ body {
   z-index: -1;
 }
 
-footer div#grid{
+footer div#grid {
+  opacity: 0;
+  transition: opacity .5s linear ;
 
   div.grid-horizontal {
     @include grid-horizontal_base;
@@ -284,5 +293,9 @@ footer div#grid{
       @include grid-vertical_base;
       left: 75%;
     }
+  }
+
+  &.active {
+    opacity: 1;
   }
 }
