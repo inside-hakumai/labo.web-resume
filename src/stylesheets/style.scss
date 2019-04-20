@@ -1,3 +1,11 @@
+$break-point: 1000px;
+@mixin small-screen {
+  @media screen and (max-width: $break-point) {
+    @content;
+  }
+}
+
+
 ul {
   padding-left: 0;
 }
@@ -93,6 +101,9 @@ div.row {
   &.single {
     section.component-wrapper {
       width: 60%;
+      @include small-screen {
+        width: 100%;
+      }
     }
 
     &.right {
@@ -104,7 +115,18 @@ div.row {
 
   &.double {
     section.component-wrapper {
-      width: 40%;
+      &:nth-child(1) {
+        width: 50%;
+        @include small-screen {
+          width: 100%;
+        }
+      }
+      &:nth-child(2) {
+        width: 25%;
+        @include small-screen {
+          width: 100%;
+        }
+      }
     }
   }
 }

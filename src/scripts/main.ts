@@ -175,7 +175,11 @@ async function executeAppearingAnimation(wrapperDom: HTMLElement) {
                   margin: 'auto',
                   duration: 500,
                   easing: 'easeOutQuint',
-                  changeComplete: resolve
+                  changeComplete: () => {
+                     $(`#${wrapperDomId} div.frame-fastspin, #${wrapperDomId} div.frame-slowspin`)
+                        .css('width', 'calc(100% - 10px');
+                     resolve();
+                  }
                }, 100)
          }),
          new Promise(resolve => {
@@ -251,7 +255,11 @@ async function executeTitleComponentAnimation() {
                   margin: 'auto',
                   duration: 500,
                   easing: 'easeOutQuint',
-                  changeComplete: resolve
+                  changeComplete: () => {
+                     $(`#title-wrapper div.frame-fastspin, #title-wrapper div.frame-slowspin`)
+                        .css('width', 'calc(100% - 10px');
+                     resolve();
+                  }
                }, 100)
             }),
          new Promise(resolve => {
