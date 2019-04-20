@@ -113,16 +113,19 @@ async function spin(wrapperDom: HTMLElement): Promise<void> {
       anime.timeline({})
          .add({
             targets: `#${wrapperDomId} div.frame-fastspin`,
-            rotate: 360,
+            rotate: [0, 360],
             duration: 2000,
             easing: 'linear',
          }, 0)
          .add({
             targets: `#${wrapperDomId} div.frame-slowspin`,
-            rotate: 180,
+            rotate: [0, 180],
             duration: 2000,
             easing: 'linear',
-            changeComplete: resolve
+            changeComplete: () => {
+               console.debug(`Complete frame spin of `, wrapperDom, `. 'load' event => ${isAlreadyLoaded}`);
+               resolve();
+            }
          }, 0)
    }));
 }
