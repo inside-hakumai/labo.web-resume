@@ -14,6 +14,7 @@ import Icons from 'uikit/dist/js/uikit-icons';
 UIkit.use(Icons);
 
 require("node_modules/jquery-inview/jquery.inview.js");
+require("./optimize_size");
 
 type langType = "ja" | "en";
 

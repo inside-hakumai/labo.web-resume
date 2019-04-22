@@ -254,13 +254,15 @@ body {
 
       section#title-wrapper {
         width: 500px;
-        height: 100px;
+        height: 200px;
         margin: 0 auto;
+        max-width: 100%;
+        box-sizing: border-box;
 
         h1 {
           font-family: "Sawarabi Mincho", sans-serif;
-          width: 500px;
-          height: 100px;
+          width: 100%;
+          height: 100%;
           line-height: 100px;
           text-align: center;
           margin: auto;
