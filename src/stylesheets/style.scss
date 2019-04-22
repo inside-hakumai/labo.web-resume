@@ -1,3 +1,11 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
+
+@font-face {
+  font-family: "Noto Sans Mono CJK JP";
+  src: url("./NotoSansMonoCJKjp-Regular.otf") format("opentype")
+}
+
+
 $break-point: 1000px;
 @mixin small-screen {
   @media screen and (max-width: $break-point) {
@@ -40,6 +48,8 @@ dd {
 h1, h2, h3, p, dt, dd, li {
   visibility: hidden;
   overflow: hidden;
+  white-space: nowrap;
+  line-height: 30px;
 
   &.active {
     visibility: visible;
@@ -132,7 +142,7 @@ div.row {
 }
 
 body {
-  font-family: 'Noto Sans JP', sans-serif;
+  font-family: 'Noto Sans Mono CJK JP', sans-serif;
   width: 100%;
 
   header {

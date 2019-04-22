@@ -36,6 +36,7 @@ function lib_css(cb) {
   src([
     "node_modules/normalize.css/normalize.css",
     'node_modules/uikit/dist/css/uikit.css',
+    'src/stylesheets/NotoSansMonoCJKjp-Regular.otf'
     ])
     .pipe(dest("dist/css"));
   cb();
