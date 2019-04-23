@@ -1,4 +1,6 @@
 import 'jquery'
+import $ from "jquery";
+import {ensureNotUndefinedOrNull} from "./helpers";
 
 
 /**
@@ -12,5 +14,18 @@ function adjustBrandingWrapperMargin() {
       .css('height', `${innerHeight}px`);
 }
 
+
+function adjustWrapperFrameSize() {
+   $('.component-wrapper').each(function() {
+      if (!$(this).hasClass('done-animation')) return;
+
+      const titleDomWidth = ensureNotUndefinedOrNull($(this).outerWidth());
+      const titleDomHeight = ensureNotUndefinedOrNull($(this).outerHeight());
+
+      $(this).find('div.frame-fastspin, div.frame-slowspin').css('height', `${titleDomHeight - 10}px`);
+   });
+}
+
 $(adjustBrandingWrapperMargin);
-$(window).on('resize', adjustBrandingWrapperMargin);
+window.addEventListener('resize', adjustBrandingWrapperMargin);
+window.addEventListener('resize', adjustWrapperFrameSize);

@@ -5,10 +5,16 @@
   src: url("./NotoSansMonoCJKjp-Regular.otf") format("opentype")
 }
 
-
-$break-point: 1000px;
+$small-break-point: 650px;
 @mixin small-screen {
-  @media screen and (max-width: $break-point) {
+  @media screen and (max-width: $small-break-point) {
+    @content;
+  }
+}
+
+$middle-break-point: 1000px;
+@mixin middle-screen {
+  @media screen and (max-width: $middle-break-point) {
     @content;
   }
 }
@@ -48,12 +54,28 @@ dd {
 h1, h2, h3, p, dt, dd, li {
   visibility: hidden;
   overflow: hidden;
-  white-space: nowrap;
-  line-height: 30px;
+  //white-space: nowrap;
+  //line-height: 30px;
+
+  span.line {
+    display: inline-block;
+    // width: auto; // span.line のwidthはJavaScriptによって制御される
+    margin-right: 8px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
 
   &.active {
     visibility: visible;
   }
+}
+
+#tester-ja, #tester-en {
+  position: absolute;
+  visibility: hidden;
+  height: auto;
+  width: auto;
+  white-space: nowrap;
 }
 
 section.component-wrapper {
@@ -61,6 +83,11 @@ section.component-wrapper {
   margin-top: 100px;
   margin-bottom: 100px;
   padding: 50px;
+  overflow: hidden;
+
+  @include middle-screen {
+    padding: 25px;
+  }
 
   div.frame-fastspin, div.frame-slowspin {
     width: calc(100% - 10px);
@@ -111,7 +138,7 @@ div.row {
   &.single {
     section.component-wrapper {
       width: 60%;
-      @include small-screen {
+      @include middle-screen {
         width: 100%;
       }
     }
@@ -127,13 +154,13 @@ div.row {
     section.component-wrapper {
       &:nth-child(1) {
         width: 50%;
-        @include small-screen {
+        @include middle-screen {
           width: 100%;
         }
       }
       &:nth-child(2) {
         width: 25%;
-        @include small-screen {
+        @include middle-screen {
           width: 100%;
         }
       }
@@ -268,6 +295,10 @@ body {
         margin: 0 auto;
         max-width: 100%;
         box-sizing: border-box;
+
+        @include middle-screen {
+          padding: 50px;
+        }
 
         h1 {
           font-family: "Sawarabi Mincho", sans-serif;

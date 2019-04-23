@@ -14,7 +14,8 @@ import Icons from 'uikit/dist/js/uikit-icons';
 UIkit.use(Icons);
 
 require("node_modules/jquery-inview/jquery.inview.js");
-require("./optimize_size");
+import "./optimize_size";
+import {isHalf, ensureNotUndefinedOrNull} from './helpers';
 
 type langType = "ja" | "en";
 
@@ -23,19 +24,8 @@ let currentLang:langType = "ja";
 let timeOnReady: number | null = null;
 let timeOnLoad:  number | null = null;
 
-
-/**
- * 与えられた値がnullかundefinedではないことを確約する
- * nullかundefinedな値が与えられた場合はエラーを発生させる
- * @param value チェック対象の値
- */
-function ensureNotUndefinedOrNull<T>(value: T) : NonNullable<T> {
-
-   if (typeof value === 'undefined') throw new Error("undefined detected");
-   if (value === null) throw new Error("null detected");
-
-   return <NonNullable<T>> value; // todo タイプアサーションを使用せずにコンパイルを通したい
-}
+let jaCharacterWidth: number | null = null;
+let enCharacterWidth: number | null = null;
 
 
 function switchLang(lang: langType) {
@@ -187,7 +177,7 @@ async function executeAppearingAnimation(wrapperDom: HTMLElement) {
             // DOM上の，子にテキストノードを含むようなノードに対してはShuffleTextを適用
             // 含まないようなノードに対しては単に visibility の値を visible に変更するだけ
             let effectPromises: Promise<any>[] = [];
-            let nodes = $(`#${wrapperDomId}`).find("h1, h2, h3, p, dt, dd, li");
+            let nodes = $(`#${wrapperDomId}`).find("h1, h2, h3, p, dt, dd, li, span");
             for (let i = 0; i < nodes.length; i++) {
                const childNodes = $(nodes[i]).contents();
 
@@ -242,8 +232,8 @@ async function executeTitleComponentAnimation() {
                   targets: `#title-wrapper div.frame-fastspin`,
                   width: titleDomWidth - 10,
                   height: titleDomHeight - 10,
-                  right: '9px',
-                  bottom: '9px',
+                  right: '8px',
+                  bottom: '8px',
                   duration: 500,
                   easing: 'easeOutQuint'
                }, 0)
@@ -309,6 +299,51 @@ $(async () => {
 let isAlreadyLoaded = false;
 $(window).on('load', function() {
    isAlreadyLoaded = true;
+
+   /**
+    * 日本語等幅フォントと英語等幅フォントそれぞれの横幅を計算し保持しておく
+    */
+   $('body').append('<div id="tester-ja" class="tester">あ</div>' +
+      '<div id="tester-en" class="tester">a</div>');
+   const jaTester = ensureNotUndefinedOrNull(document.getElementById("tester-ja"));
+   jaTester.style.fontSize = "16"; // todo Avoid hard coding
+   jaCharacterWidth = jaTester.clientWidth;
+
+   const enTester = ensureNotUndefinedOrNull(document.getElementById("tester-en"));
+   enTester.style.fontSize = "16"; // todo Avoid hard coding
+   enCharacterWidth = enTester.clientWidth;
+
+   console.debug(`JP character width: ${jaCharacterWidth}`);
+   console.debug(`EN character width: ${enCharacterWidth}`);
+
+   /**
+    * HTML内に含まれるテキストノードを半角スペースで分割し， <span class="line"></span> でラップする
+    */
+   $('.component-wrapper p, .component-wrapper dt, .component-wrapper dd, .component-wrapper li')
+      .each(function(_, node) {
+         for (let i = 0; i < node.childNodes.length; i++) {
+            if (node.childNodes[i].nodeType === Node.TEXT_NODE){
+               const nodeText = node.childNodes[i].textContent;
+               if (nodeText !== null && nodeText.trim().length !== 0) {
+                  let newNode = document.createElement('span');
+                  const textTerms = nodeText.split(" ");
+                  for (let k = 0; k < textTerms.length; k++) {
+                     const term = textTerms[k];
+                     let termWidth = 0;
+
+                     for (let m = 0; m < term.length; m++ ) {
+                        const character = term[m];
+                        termWidth += isHalf(character) ? <number>enCharacterWidth : <number>jaCharacterWidth; // todo avoid type assertion
+                     }
+
+                     newNode.appendChild($(`<span class="line" style="width: ${termWidth}px">${textTerms[k]}</span>`).get(0));
+                  }
+                  node.replaceChild(newNode, node.childNodes[i]);
+               }
+            }
+         }
+      });
+
    $('header, #grid, #scroll-down').addClass('active');
 
    timeOnLoad = performance.now();
