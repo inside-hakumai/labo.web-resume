@@ -75,14 +75,21 @@ function html(cb) {
   cb();
 }
 
+function asset(cb) {
+  src('node_modules/kuromoji/dict/*')
+    .pipe(dest('dist/assets/dict/'));
+  cb();
+}
+
 exports.css = css;
 exports.js = js;
 exports.lib_css = lib_css;
 // exports.lib_js = lib_js;
 exports.image = image;
 exports.html = html;
+exports.assert = asset;
 
-const build = parallel(css, js, lib_css, /*lib_js, */image, html);
+const build = parallel(css, js, lib_css, /*lib_js, */image, html, asset);
 
 task('watch', function() {
   watch(

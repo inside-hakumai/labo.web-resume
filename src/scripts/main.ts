@@ -14,8 +14,9 @@ import Icons from 'uikit/dist/js/uikit-icons';
 UIkit.use(Icons);
 
 require("node_modules/jquery-inview/jquery.inview.js");
+import * as kuromoji from "kuromoji";
 import "./optimize_size";
-import {isHalf, ensureNotUndefinedOrNull} from './helpers';
+import {isHalf, ensureNotUndefinedOrNull, tokenizeText, calcTextWidth} from './helpers';
 
 type langType = "ja" | "en";
 
@@ -297,7 +298,7 @@ $(async () => {
 
 
 let isAlreadyLoaded = false;
-$(window).on('load', function() {
+$(window).on('load', async function() {
    isAlreadyLoaded = true;
 
    /**
@@ -318,31 +319,48 @@ $(window).on('load', function() {
 
    /**
     * HTML内に含まれるテキストノードを半角スペースで分割し， <span class="line"></span> でラップする
-    */
-   $('.component-wrapper p, .component-wrapper dt, .component-wrapper dd, .component-wrapper li')
-      .each(function(_, node) {
-         for (let i = 0; i < node.childNodes.length; i++) {
-            if (node.childNodes[i].nodeType === Node.TEXT_NODE){
-               const nodeText = node.childNodes[i].textContent;
-               if (nodeText !== null && nodeText.trim().length !== 0) {
-                  let newNode = document.createElement('span');
-                  const textTerms = nodeText.split(" ");
-                  for (let k = 0; k < textTerms.length; k++) {
-                     const term = textTerms[k];
-                     let termWidth = 0;
+    */　// todo インデントが深すぎる，処理が見づらい
+   const textParentNodes = $('.component-wrapper p, .component-wrapper dt, .component-wrapper dd, .component-wrapper li');
+   for (let i = 0; i < textParentNodes.length; i++) {
+      const node = textParentNodes[i];
+      const parentWidth = ensureNotUndefinedOrNull($(node).width());
 
-                     for (let m = 0; m < term.length; m++ ) {
-                        const character = term[m];
-                        termWidth += isHalf(character) ? <number>enCharacterWidth : <number>jaCharacterWidth; // todo avoid type assertion
+      for (let i = 0; i < node.childNodes.length; i++) {
+         if (node.childNodes[i].nodeType === Node.TEXT_NODE){
+            const nodeText = node.childNodes[i].textContent;
+            if (nodeText !== null && nodeText.trim().length !== 0) {
+               const tokens = await tokenizeText(nodeText);
+
+               let newNode = document.createElement('span');
+               let charsBuffer = '';
+               let termWidth = 0;
+               for (let k = 0; k < tokens.length; k++) {
+                  const token = tokens[k];
+                  const tokenText = token["surface_form"];
+
+                  if (k !== tokens.length - 1 ) {
+
+                     if (token["pos"] === "助詞" || (token["pos"] === "記号" && token["pos_detail_1"] === "空白")) {
+                        termWidth += calcTextWidth(tokenText);
+                        charsBuffer += tokenText;
+                        newNode.appendChild($(`<span class="line" style="width: ${termWidth}px">${charsBuffer}</span>`).get(0));
+                        charsBuffer = '';
+                        termWidth = 0;
+                     } else {
+                        termWidth += calcTextWidth(tokenText);
+                        charsBuffer += tokenText;
                      }
-
-                     newNode.appendChild($(`<span class="line" style="width: ${termWidth}px">${textTerms[k]}</span>`).get(0));
+                  } else {
+                     termWidth += calcTextWidth(tokenText);
+                     charsBuffer += tokenText;
+                     newNode.appendChild($(`<span class="line" style="width: ${termWidth}px">${charsBuffer}</span>`).get(0));
                   }
-                  node.replaceChild(newNode, node.childNodes[i]);
                }
+               node.replaceChild(newNode, node.childNodes[i]);
             }
          }
-      });
+      }
+   }
 
    $('header, #grid, #scroll-down').addClass('active');
 
