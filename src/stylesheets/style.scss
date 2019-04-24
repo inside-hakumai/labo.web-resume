@@ -409,7 +409,11 @@ body {
         margin: 0 0 10px 0;
         width: 100%;
         overflow: hidden;
-        height: 25px;
+        height: 30px;
+
+        @include small-screen {
+          height: 25px;
+        }
 
         span {
           display: inline-block;

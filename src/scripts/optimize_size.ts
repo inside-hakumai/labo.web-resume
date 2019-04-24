@@ -1,6 +1,6 @@
 import 'jquery'
 import $ from "jquery";
-import {ensureNotUndefinedOrNull} from "./helpers";
+import {calcTextWidth, ensureNotUndefinedOrNull} from "./helpers";
 
 
 /**
@@ -26,6 +26,40 @@ function adjustWrapperFrameSize() {
    });
 }
 
-$(adjustBrandingWrapperMargin);
+function adjustTextWidth() {
+   const jaFontSize = Number.parseInt($('body').css('font-size').slice(0, -2));
+   const enFontSize = jaFontSize / 2;
+   $('span.line').each(function() {
+      $(this).css('width',
+         `${calcTextWidth($(this).text(), enFontSize, jaFontSize)}px`
+      );
+   });
+}
+
+let currentWindowWidth = 0;
+let currentWindowHeight = 0;
+
+$(() => {
+   currentWindowWidth = ensureNotUndefinedOrNull($(window).width());
+   currentWindowHeight = ensureNotUndefinedOrNull($(window).width());
+   adjustBrandingWrapperMargin();
+});
+
+window.addEventListener('resize', () => {
+   const newWindowWidth = ensureNotUndefinedOrNull($(window).width());
+   const newWindowHeight = ensureNotUndefinedOrNull($(window).width());
+
+   if (newWindowWidth !== currentWindowWidth) {
+      currentWindowWidth = newWindowWidth;
+      window.dispatchEvent(new Event("resizeHorizontally"));
+   }
+
+   if (newWindowHeight !== currentWindowHeight) {
+      currentWindowHeight = newWindowHeight;
+      window.dispatchEvent(new Event("resizeVertically"));
+   }
+});
+
 window.addEventListener('resize', adjustBrandingWrapperMargin);
-window.addEventListener('resize', adjustWrapperFrameSize);
+window.addEventListener('resizeHorizontally', adjustWrapperFrameSize);
+window.addEventListener('resizeHorizontally', adjustTextWidth);

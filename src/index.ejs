@@ -162,7 +162,8 @@ function yieldWorksHtml(works) {
             <h3 data-ja-text="国内会議発表" data-en-text="Domestic Conferences">国内会議発表</h3>
             <dl>
                 <% publications.domestic.forEach(function(pub) { %>
-                    <dt><%= pub.title %><%- pub.award ? `<span class="award">${pub.award}</span>` : "" %></dt>
+                    <dt><%= pub.title %></dt>
+                    <%- pub.award ? `<p class="award"><span>${pub.award}</span></p>` : "" %>
                     <dd>
                         <p class="publication_author"><%- yieldAuthorList(pub) %></p>
                         <p class="publication_conference"><%- yieldConference(pub) %></p>

@@ -84,7 +84,7 @@ async function appearWithShuffleEffect(targetDom: HTMLElement): Promise<void> {
 
       if (output) {
          $(targetDom).addClass("active");
-         shuffleText.setText("     " + output + "     ");
+         shuffleText.setText(output);
          shuffleText.duration = targetDom.tagName === "H2" ? 400 : 800;
          shuffleText.start();
          setTimeout(resolve, shuffleText.duration);
@@ -304,14 +304,16 @@ $(window).on('load', async function() {
    /**
     * 日本語等幅フォントと英語等幅フォントそれぞれの横幅を計算し保持しておく
     */
+   const jaFontSize = Number.parseInt($('body').css('font-size').slice(0, -2));
+   const enFontSize = jaFontSize / 2;
    $('body').append('<div id="tester-ja" class="tester">あ</div>' +
       '<div id="tester-en" class="tester">a</div>');
    const jaTester = ensureNotUndefinedOrNull(document.getElementById("tester-ja"));
-   jaTester.style.fontSize = "16"; // todo Avoid hard coding
+   jaTester.style.fontSize = jaFontSize.toString();
    jaCharacterWidth = jaTester.clientWidth;
 
    const enTester = ensureNotUndefinedOrNull(document.getElementById("tester-en"));
-   enTester.style.fontSize = "16"; // todo Avoid hard coding
+   enTester.style.fontSize = enFontSize.toString();
    enCharacterWidth = enTester.clientWidth;
 
    console.debug(`JP character width: ${jaCharacterWidth}`);
@@ -320,16 +322,17 @@ $(window).on('load', async function() {
    /**
     * HTML内に含まれるテキストノードを半角スペースで分割し， <span class="line"></span> でラップする
     */　// todo インデントが深すぎる，処理が見づらい
-   const textParentNodes = $('.component-wrapper p, .component-wrapper dt, .component-wrapper dd, .component-wrapper li');
+   const textParentNodes = $('.component-wrapper p, .component-wrapper span.author_me, .component-wrapper dt, .component-wrapper dd, .component-wrapper li');
    for (let i = 0; i < textParentNodes.length; i++) {
       const node = textParentNodes[i];
-      const parentWidth = ensureNotUndefinedOrNull($(node).width());
+      const ignoreSpace = $(node).hasClass("publication_author") || $(node).hasClass("author_me");
 
       for (let i = 0; i < node.childNodes.length; i++) {
          if (node.childNodes[i].nodeType === Node.TEXT_NODE){
             const nodeText = node.childNodes[i].textContent;
             if (nodeText !== null && nodeText.trim().length !== 0) {
                const tokens = await tokenizeText(nodeText);
+               console.log(tokens);
 
                let newNode = document.createElement('span');
                let charsBuffer = '';
@@ -340,18 +343,20 @@ $(window).on('load', async function() {
 
                   if (k !== tokens.length - 1 ) {
 
-                     if (token["pos"] === "助詞" || (token["pos"] === "記号" && token["pos_detail_1"] === "空白")) {
-                        termWidth += calcTextWidth(tokenText);
+                     if (token["pos"] === "助詞"
+                        || (!ignoreSpace && token["pos"] === "記号" && token["pos_detail_1"] === "空白")
+                        || tokenText === "," || tokenText === "，") {
+                        termWidth += calcTextWidth(tokenText, enFontSize, jaFontSize);
                         charsBuffer += tokenText;
                         newNode.appendChild($(`<span class="line" style="width: ${termWidth}px">${charsBuffer}</span>`).get(0));
                         charsBuffer = '';
                         termWidth = 0;
                      } else {
-                        termWidth += calcTextWidth(tokenText);
+                        termWidth += calcTextWidth(tokenText, enFontSize, jaFontSize);
                         charsBuffer += tokenText;
                      }
                   } else {
-                     termWidth += calcTextWidth(tokenText);
+                     termWidth += calcTextWidth(tokenText, enFontSize, jaFontSize);
                      charsBuffer += tokenText;
                      newNode.appendChild($(`<span class="line" style="width: ${termWidth}px">${charsBuffer}</span>`).get(0));
                   }
