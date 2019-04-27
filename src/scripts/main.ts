@@ -322,49 +322,57 @@ $(window).on('load', async function() {
    /**
     * HTML内に含まれるテキストノードを半角スペースで分割し， <span class="line"></span> でラップする
     */　// todo インデントが深すぎる，処理が見づらい
-   const textParentNodes = $('.component-wrapper p, .component-wrapper span.author_me, .component-wrapper dt, .component-wrapper dd, .component-wrapper li');
+   const textParentNodes = $('*[data-ja-text], *[data-text]');
+   console.log(textParentNodes);
    for (let i = 0; i < textParentNodes.length; i++) {
       const node = textParentNodes[i];
-      const ignoreSpace = $(node).hasClass("publication_author") || $(node).hasClass("author_me");
 
-      for (let i = 0; i < node.childNodes.length; i++) {
-         if (node.childNodes[i].nodeType === Node.TEXT_NODE){
-            const nodeText = node.childNodes[i].textContent;
-            if (nodeText !== null && nodeText.trim().length !== 0) {
-               const tokens = await tokenizeText(nodeText);
-               console.log(tokens);
+      const terms = $(node).data("ja-text") || $(node).data("text");
+      console.log(node);
+      console.log(terms.map((term) => unescape(term))); // todo unescapeはdeprecated
 
-               let newNode = document.createElement('span');
-               let charsBuffer = '';
-               let termWidth = 0;
-               for (let k = 0; k < tokens.length; k++) {
-                  const token = tokens[k];
-                  const tokenText = token["surface_form"];
 
-                  if (k !== tokens.length - 1 ) {
-
-                     if (token["pos"] === "助詞"
-                        || (!ignoreSpace && token["pos"] === "記号" && token["pos_detail_1"] === "空白")
-                        || tokenText === "," || tokenText === "，") {
-                        termWidth += calcTextWidth(tokenText, enFontSize, jaFontSize);
-                        charsBuffer += tokenText;
-                        newNode.appendChild($(`<span class="line" style="width: ${termWidth}px">${charsBuffer}</span>`).get(0));
-                        charsBuffer = '';
-                        termWidth = 0;
-                     } else {
-                        termWidth += calcTextWidth(tokenText, enFontSize, jaFontSize);
-                        charsBuffer += tokenText;
-                     }
-                  } else {
-                     termWidth += calcTextWidth(tokenText, enFontSize, jaFontSize);
-                     charsBuffer += tokenText;
-                     newNode.appendChild($(`<span class="line" style="width: ${termWidth}px">${charsBuffer}</span>`).get(0));
-                  }
-               }
-               node.replaceChild(newNode, node.childNodes[i]);
-            }
-         }
-      }
+      // for (let i = 0; i < node.childNodes.length; i++) {
+      //
+      //
+      //
+      //    if (node.childNodes[i].nodeType === Node.TEXT_NODE){
+      //       const nodeText = node.childNodes[i].textContent;
+      //       if (nodeText !== null && nodeText.trim().length !== 0) {
+      //          const tokens = await tokenizeText(nodeText);
+      //          console.log(tokens);
+      //
+      //          let newNode = document.createElement('span');
+      //          let charsBuffer = '';
+      //          let termWidth = 0;
+      //          for (let k = 0; k < tokens.length; k++) {
+      //             const token = tokens[k];
+      //             const tokenText = token["surface_form"];
+      //
+      //             if (k !== tokens.length - 1 ) {
+      //
+      //                if (token["pos"] === "助詞"
+      //                   || (!ignoreSpace && token["pos"] === "記号" && token["pos_detail_1"] === "空白")
+      //                   || tokenText === "," || tokenText === "，") {
+      //                   termWidth += calcTextWidth(tokenText, enFontSize, jaFontSize);
+      //                   charsBuffer += tokenText;
+      //                   newNode.appendChild($(`<span class="line" style="width: ${termWidth}px">${charsBuffer}</span>`).get(0));
+      //                   charsBuffer = '';
+      //                   termWidth = 0;
+      //                } else {
+      //                   termWidth += calcTextWidth(tokenText, enFontSize, jaFontSize);
+      //                   charsBuffer += tokenText;
+      //                }
+      //             } else {
+      //                termWidth += calcTextWidth(tokenText, enFontSize, jaFontSize);
+      //                charsBuffer += tokenText;
+      //                newNode.appendChild($(`<span class="line" style="width: ${termWidth}px">${charsBuffer}</span>`).get(0));
+      //             }
+      //          }
+      //          node.replaceChild(newNode, node.childNodes[i]);
+      //       }
+      //    }
+      // }
    }
 
    $('header, #grid, #scroll-down').addClass('active');

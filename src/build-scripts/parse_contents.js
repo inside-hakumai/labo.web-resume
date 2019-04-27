@@ -11,7 +11,7 @@ let tokenizer = null;
 async function getTokenizer() {
   if (tokenizer) return tokenizer;
 
-  $(window).on("tokenizerReady", function() {
+  $(window).on("tokenizerReady", function () {
     return tokenizer;
   })
 
@@ -84,7 +84,7 @@ function escapeContents(contents) {
   return new Promise((resolve) => {
     jp.apply(contents, "$..*", function (value) {
       if (typeof value === "string") {
-        return escapeHtml(value);
+        return escape(value); // todo escape()はdeprecated
       }
       return value
     });
