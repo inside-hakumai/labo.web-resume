@@ -3,6 +3,8 @@
 const kuromoji = require("kuromoji");
 // import {calcTextWidth} from "../scripts/helpers";
 const $ = require("jquery");
+const jp = require("jsonpath");
+const escapeHtml = require("escape-html");
 
 let tokenizer = null;
 
@@ -48,8 +50,6 @@ function splitText(tokens, ignoreSpace) {
 
 function splitContentTextsIntoTerms(contents) {
 
-  const jp = require("jsonpath");
-
   const PARSE_TARGET_PATHS = [
     "$.affiliations[*].ja[*]",
     "$.affiliations[*].en[*]",
@@ -80,4 +80,17 @@ function splitContentTextsIntoTerms(contents) {
 
 }
 
-module.exports = splitContentTextsIntoTerms;
+function escapeContents(contents) {
+  return new Promise((resolve) => {
+    jp.apply(contents, "$..*", function (value) {
+      if (typeof value === "string") {
+        return escapeHtml(value);
+      }
+      return value
+    });
+    resolve(contents);
+  });
+}
+
+exports.splitContentTextsIntoTerms = splitContentTextsIntoTerms;
+exports.escapeContents = escapeContents;

@@ -68,16 +68,18 @@ function image(cb) {
 
 function html(cb) {
   const contents = JSON.parse(fs.readFileSync('./contents.json', 'utf8'));
-  const parseContents = require("./src/build-scripts/parse_contents");
+  const parseContents = require("./src/build-scripts/parse_contents").splitContentTextsIntoTerms;
+  const escapeContents = require("./src/build-scripts/parse_contents").escapeContents;
 
-  parseContents(contents).then((parsedContents) => {
-    console.log(JSON.stringify(parsedContents, null, 2));
-    cb();
-  });
-
-  // src('src/index.ejs')
-  //   .pipe(ejs(parseContents(contents), {rmWhitespace: true}, {ext: '.html'}))
-  //   .pipe(dest('dist'));
+  parseContents(contents)
+    .then(escapeContents)
+    .then((resultContents) => {
+      console.log(resultContents);
+      src('src/index.ejs')
+        .pipe(ejs(resultContents, {rmWhitespace: true}, {ext: '.html'}))
+        .pipe(dest('dist'));
+      cb();
+    });
 }
 
 function asset(cb) {
@@ -86,6 +88,7 @@ function asset(cb) {
   cb();
 }
 
+exports.clean = clean;
 exports.css = css;
 exports.js = js;
 exports.lib_css = lib_css;
