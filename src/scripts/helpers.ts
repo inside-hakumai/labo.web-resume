@@ -1,27 +1,4 @@
-import * as kuromoji from "kuromoji";
 
-let tokenizer = null;
-kuromoji.builder({dicPath: "assets/dict"}).build(function (err, kTokenizer) {
-   if (err) throw new Error(err);
-
-   tokenizer = kTokenizer;
-   const event = new Event('tokenizerReady');
-   window.dispatchEvent(event)
-});
-
-async function getTokenizer() {
-   if (tokenizer) return tokenizer;
-
-   $(window).on("tokenizerReady", function() {
-      return tokenizer;
-   })
-
-}
-
-export async function tokenizeText(text: string): Promise<object[]> {
-   // @ts-ignore
-   return ensureNotUndefinedOrNull(await getTokenizer()).tokenize(text);
-}
 
 
 export function isHalf(c: string){

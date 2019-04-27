@@ -22,6 +22,7 @@
     "gulp-typescript": "^5.0.1",
     "jquery": "^3.4.0",
     "jquery-inview": "^1.1.2",
+    "jsonpath": "^1.0.1",
     "kuromoji": "^0.1.2",
     "normalize.css": "^8.0.1",
     "rimraf": "^2.6.3",

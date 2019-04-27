@@ -13,8 +13,6 @@ const webpackConfig = require("./webpack.config");
 
 const tsProject = ts.createProject('tsconfig.json');
 
-const contents = JSON.parse(fs.readFileSync('./contents.json', 'utf8'));
-
 function clean(cb) {
   rimraf('./dist', cb);
 }
@@ -69,10 +67,17 @@ function image(cb) {
 }
 
 function html(cb) {
-  src('src/index.ejs')
-    .pipe(ejs(contents, {rmWhitespace: true}, {ext: '.html'}))
-    .pipe(dest('dist'));
-  cb();
+  const contents = JSON.parse(fs.readFileSync('./contents.json', 'utf8'));
+  const parseContents = require("./src/build-scripts/parse_contents");
+
+  parseContents(contents).then((parsedContents) => {
+    console.log(JSON.stringify(parsedContents, null, 2));
+    cb();
+  });
+
+  // src('src/index.ejs')
+  //   .pipe(ejs(parseContents(contents), {rmWhitespace: true}, {ext: '.html'}))
+  //   .pipe(dest('dist'));
 }
 
 function asset(cb) {

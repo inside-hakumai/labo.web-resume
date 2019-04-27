@@ -14,9 +14,9 @@ import Icons from 'uikit/dist/js/uikit-icons';
 UIkit.use(Icons);
 
 require("node_modules/jquery-inview/jquery.inview.js");
-import * as kuromoji from "kuromoji";
+
 import "./optimize_size";
-import {isHalf, ensureNotUndefinedOrNull, tokenizeText, calcTextWidth} from './helpers';
+import {isHalf, ensureNotUndefinedOrNull, calcTextWidth} from './helpers';
 
 type langType = "ja" | "en";
 
