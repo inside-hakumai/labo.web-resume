@@ -16,7 +16,7 @@ UIkit.use(Icons);
 require("node_modules/jquery-inview/jquery.inview.js");
 
 import "./optimize_size";
-import {isHalf, ensureNotUndefinedOrNull, calcTextWidth} from './helpers';
+import {isHalf, ensureNotUndefinedOrNull, calcTextWidth, calcCharWidth, getCssSelector} from './helpers';
 
 type langType = "ja" | "en";
 
@@ -304,33 +304,48 @@ $(window).on('load', async function() {
    /**
     * 日本語等幅フォントと英語等幅フォントそれぞれの横幅を計算し保持しておく
     */
-   const jaFontSize = Number.parseInt($('body').css('font-size').slice(0, -2));
-   const enFontSize = jaFontSize / 2;
-   $('body').append('<div id="tester-ja" class="tester">あ</div>' +
-      '<div id="tester-en" class="tester">a</div>');
-   const jaTester = ensureNotUndefinedOrNull(document.getElementById("tester-ja"));
-   jaTester.style.fontSize = jaFontSize.toString();
-   jaCharacterWidth = jaTester.clientWidth;
-
-   const enTester = ensureNotUndefinedOrNull(document.getElementById("tester-en"));
-   enTester.style.fontSize = enFontSize.toString();
-   enCharacterWidth = enTester.clientWidth;
-
-   console.debug(`JP character width: ${jaCharacterWidth}`);
-   console.debug(`EN character width: ${enCharacterWidth}`);
+   // const jaFontSize = Number.parseInt($('body').css('font-size').slice(0, -2));
+   // const enFontSize = jaFontSize / 2;
+   // $('body').append('<div id="tester-ja" class="tester">あ</div>' +
+   //    '<div id="tester-en" class="tester">a</div>');
+   // const jaTester = ensureNotUndefinedOrNull(document.getElementById("tester-ja"));
+   // jaTester.style.fontSize = jaFontSize.toString();
+   // jaCharacterWidth = jaTester.clientWidth;
+   //
+   // const enTester = ensureNotUndefinedOrNull(document.getElementById("tester-en"));
+   // enTester.style.fontSize = enFontSize.toString();
+   // enCharacterWidth = enTester.clientWidth;
 
    /**
     * HTML内に含まれるテキストノードを半角スペースで分割し， <span class="line"></span> でラップする
     */　// todo インデントが深すぎる，処理が見づらい
    const textParentNodes = $('*[data-ja-text], *[data-text]');
-   console.log(textParentNodes);
+   console.debug(textParentNodes);
    for (let i = 0; i < textParentNodes.length; i++) {
       const node = textParentNodes[i];
 
       const terms = $(node).data("ja-text") || $(node).data("text");
-      console.log(node);
-      console.log(terms.map((term) => unescape(term))); // todo unescapeはdeprecated
+      const unescapedTerms = terms.map(unescape); // todo unescape()はdeprecated
 
+      // console.debug(node);
+      // console.debug(unescapedTerms);
+      // console.debug(node.childNodes);
+      // console.debug(node.textContent);
+
+      if (node.childNodes.length === 1 && node.childNodes[0].nodeType === Node.TEXT_NODE) {
+         const innerTextNode = node.childNodes[0];
+
+         const newWrapperNode = document.createElement('span');
+         for (let k = 0; k < unescapedTerms.length; k++) {
+            const term = unescapedTerms[k];
+            // console.debug(term);
+            const termWidth = calcTextWidth(term,...calcCharWidth(getCssSelector(node)));
+            newWrapperNode.appendChild($(`<span class="line" style="width: ${termWidth}px">${term}</span>`).get(0));
+         }
+         node.replaceChild(newWrapperNode, innerTextNode);
+      } else {
+        // console.debug(node);
+      }
 
       // for (let i = 0; i < node.childNodes.length; i++) {
       //
