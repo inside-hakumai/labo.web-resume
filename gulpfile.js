@@ -82,12 +82,6 @@ function html(cb) {
     });
 }
 
-function asset(cb) {
-  src('node_modules/kuromoji/dict/*')
-    .pipe(dest('dist/assets/dict/'));
-  cb();
-}
-
 exports.clean = clean;
 exports.css = css;
 exports.js = js;
@@ -95,9 +89,8 @@ exports.lib_css = lib_css;
 // exports.lib_js = lib_js;
 exports.image = image;
 exports.html = html;
-exports.assert = asset;
 
-const build = parallel(css, js, lib_css, /*lib_js, */image, html, asset);
+const build = parallel(css, js, lib_css, /*lib_js, */image, html);
 exports.build = build;
 
 task('watch', function() {
