@@ -62,4 +62,5 @@ window.addEventListener('resize', () => {
 
 // window.addEventListener('resize', adjustBrandingWrapperMargin);
 window.addEventListener('resizeHorizontally', adjustWrapperFrameSize);
+window.addEventListener('switchLanguage', adjustWrapperFrameSize);
 window.addEventListener('resizeHorizontally', adjustTextWidth);

@@ -79,6 +79,8 @@ function switchLang(langType: langType) {
       }
    });
 
+   window.dispatchEvent(new Event("switchLanguage"));
+
    // todo 重複の排除
    // $('dt').each(function() {
    //    const output = $(this).attr(`data-${lang}-text`)
