@@ -28,44 +28,79 @@ let timeOnLoad:  number | null = null;
 let jaCharacterWidth: number | null = null;
 let enCharacterWidth: number | null = null;
 
+function decodeTextAndWrapInBlockSpan(langType: langType) {
+   /**
+    * HTML内に含まれるテキストノードを半角スペースで分割し， <span class="line"></span> でラップする
+    */　// todo インデントが深すぎる，処理が見づらい
+   const textParentNodes = $(`*[data-${langType}-text], *[data-text]`);
+   console.debug(textParentNodes);
+   for (let i = 0; i < textParentNodes.length; i++) {
+      const node = textParentNodes[i];
 
-function switchLang(lang: langType) {
-   currentLang = lang;
-   const counterLang = lang === "ja" ? "en" : "ja";
-   $(`#language-control button[data-lang='${lang}']`).addClass("button-active");
+      const terms = $(node).data(`${langType}-text`) || $(node).data("text");
+      const unescapedTerms = terms.map(unescape); // todo unescape()はdeprecated
+
+      const newWrapperNode = document.createElement('span');
+
+      for (let k = 0; k < unescapedTerms.length; k++) {
+         const term = unescapedTerms[k];
+         // console.debug(term);
+
+         if (node.tagName !== "H1" && node.tagName !== "H2" && node.tagName !== "H3") {
+            const termWidth = calcTextWidth(term,...calcCharWidth(getCssSelector(node)));
+            newWrapperNode.appendChild($(`<span class="line" style="width: ${termWidth}px">${term}</span>`).get(0));
+         } else {
+            newWrapperNode.appendChild($(`<span class="line">${term}</span>`).get(0));
+         }
+      }
+
+      $(node).empty();
+      node.append(newWrapperNode);
+   }
+}
+
+function switchLang(langType: langType) {
+   currentLang = langType;
+   const counterLang = langType === "ja" ? "en" : "ja";
+   $(`#language-control button[data-lang='${langType}']`).addClass("button-active");
    $(`#language-control button[data-lang='${counterLang}']`).removeClass("button-active");
 
-   $('h1, h2, h3').each(function() {
+   decodeTextAndWrapInBlockSpan(langType);
+
+   $(`*[data-${langType}-text], *[data-text]`).each(function() {
       if ($(this).hasClass("active")) {
-         const shuffleText = new ShuffleText(this);
-         const output = $(this).attr(`data-${lang}-text`);
-         shuffleText.setText("     " + output + "     ");
-         shuffleText.start();
+         $(this).find("span.line").each(function () {
+            const shuffleText = new ShuffleText(this);
+            // const output = $(this).attr(`data-${lang}-text`);
+            const output = $(this).text();
+            shuffleText.setText(output || "");
+            shuffleText.start();
+         });
       }
    });
 
    // todo 重複の排除
-   $('dt').each(function() {
-      const output = $(this).attr(`data-${lang}-text`)
-      if (output) {
-         const shuffleText = new ShuffleText(this);
-         shuffleText.setText(output);
-         shuffleText.duration = 400;
-         shuffleText.start();
-
-      }
-   });
-
-   $('li, p, dd').each(function() {
-      const output = $(this).attr(`data-${lang}-text`)
-      if (output) {
-         const shuffleText = new ShuffleText(this);
-         shuffleText.setText(output);
-         shuffleText.duration = 800;
-         shuffleText.start();
-
-      }
-   });
+   // $('dt').each(function() {
+   //    const output = $(this).attr(`data-${lang}-text`)
+   //    if (output) {
+   //       const shuffleText = new ShuffleText(this);
+   //       shuffleText.setText(output);
+   //       shuffleText.duration = 400;
+   //       shuffleText.start();
+   //
+   //    }
+   // });
+   //
+   // $('li, p, dd').each(function() {
+   //    const output = $(this).attr(`data-${lang}-text`)
+   //    if (output) {
+   //       const shuffleText = new ShuffleText(this);
+   //       shuffleText.setText(output);
+   //       shuffleText.duration = 800;
+   //       shuffleText.start();
+   //
+   //    }
+   // });
 }
 
 async function appear(targetDom: HTMLElement): Promise<void> {
@@ -80,7 +115,7 @@ async function appearWithShuffleEffect(targetDom: HTMLElement): Promise<void> {
 
       const shuffleText = new ShuffleText(targetDom);
       const targetLang = currentLang;
-      const output = $(targetDom).attr(`data-${targetLang}-text`) || $(targetDom).html();
+      const output = $(targetDom).text();
 
       if (output) {
          $(targetDom).addClass("active");
@@ -301,94 +336,7 @@ let isAlreadyLoaded = false;
 $(window).on('load', async function() {
    isAlreadyLoaded = true;
 
-   /**
-    * 日本語等幅フォントと英語等幅フォントそれぞれの横幅を計算し保持しておく
-    */
-   // const jaFontSize = Number.parseInt($('body').css('font-size').slice(0, -2));
-   // const enFontSize = jaFontSize / 2;
-   // $('body').append('<div id="tester-ja" class="tester">あ</div>' +
-   //    '<div id="tester-en" class="tester">a</div>');
-   // const jaTester = ensureNotUndefinedOrNull(document.getElementById("tester-ja"));
-   // jaTester.style.fontSize = jaFontSize.toString();
-   // jaCharacterWidth = jaTester.clientWidth;
-   //
-   // const enTester = ensureNotUndefinedOrNull(document.getElementById("tester-en"));
-   // enTester.style.fontSize = enFontSize.toString();
-   // enCharacterWidth = enTester.clientWidth;
-
-   /**
-    * HTML内に含まれるテキストノードを半角スペースで分割し， <span class="line"></span> でラップする
-    */　// todo インデントが深すぎる，処理が見づらい
-   const textParentNodes = $('*[data-ja-text], *[data-text]');
-   console.debug(textParentNodes);
-   for (let i = 0; i < textParentNodes.length; i++) {
-      const node = textParentNodes[i];
-
-      const terms = $(node).data("ja-text") || $(node).data("text");
-      const unescapedTerms = terms.map(unescape); // todo unescape()はdeprecated
-
-      // console.debug(node);
-      // console.debug(unescapedTerms);
-      // console.debug(node.childNodes);
-      // console.debug(node.textContent);
-
-      if (node.childNodes.length === 1 && node.childNodes[0].nodeType === Node.TEXT_NODE) {
-         const innerTextNode = node.childNodes[0];
-
-         const newWrapperNode = document.createElement('span');
-         for (let k = 0; k < unescapedTerms.length; k++) {
-            const term = unescapedTerms[k];
-            // console.debug(term);
-            const termWidth = calcTextWidth(term,...calcCharWidth(getCssSelector(node)));
-            newWrapperNode.appendChild($(`<span class="line" style="width: ${termWidth}px">${term}</span>`).get(0));
-         }
-         node.replaceChild(newWrapperNode, innerTextNode);
-      } else {
-        // console.debug(node);
-      }
-
-      // for (let i = 0; i < node.childNodes.length; i++) {
-      //
-      //
-      //
-      //    if (node.childNodes[i].nodeType === Node.TEXT_NODE){
-      //       const nodeText = node.childNodes[i].textContent;
-      //       if (nodeText !== null && nodeText.trim().length !== 0) {
-      //          const tokens = await tokenizeText(nodeText);
-      //          console.log(tokens);
-      //
-      //          let newNode = document.createElement('span');
-      //          let charsBuffer = '';
-      //          let termWidth = 0;
-      //          for (let k = 0; k < tokens.length; k++) {
-      //             const token = tokens[k];
-      //             const tokenText = token["surface_form"];
-      //
-      //             if (k !== tokens.length - 1 ) {
-      //
-      //                if (token["pos"] === "助詞"
-      //                   || (!ignoreSpace && token["pos"] === "記号" && token["pos_detail_1"] === "空白")
-      //                   || tokenText === "," || tokenText === "，") {
-      //                   termWidth += calcTextWidth(tokenText, enFontSize, jaFontSize);
-      //                   charsBuffer += tokenText;
-      //                   newNode.appendChild($(`<span class="line" style="width: ${termWidth}px">${charsBuffer}</span>`).get(0));
-      //                   charsBuffer = '';
-      //                   termWidth = 0;
-      //                } else {
-      //                   termWidth += calcTextWidth(tokenText, enFontSize, jaFontSize);
-      //                   charsBuffer += tokenText;
-      //                }
-      //             } else {
-      //                termWidth += calcTextWidth(tokenText, enFontSize, jaFontSize);
-      //                charsBuffer += tokenText;
-      //                newNode.appendChild($(`<span class="line" style="width: ${termWidth}px">${charsBuffer}</span>`).get(0));
-      //             }
-      //          }
-      //          node.replaceChild(newNode, node.childNodes[i]);
-      //       }
-      //    }
-      // }
-   }
+   decodeTextAndWrapInBlockSpan("ja");
 
    $('header, #grid, #scroll-down').addClass('active');
 
