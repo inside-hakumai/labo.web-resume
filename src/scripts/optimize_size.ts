@@ -29,7 +29,7 @@ function adjustWrapperFrameSize() {
 function adjustTextWidth() {
    calcCharWidth.resultCache = {};
    $('span.line').each(function() {
-      if ($(this).attr('data-auto-width') !== undefined) {
+      if ($(this).attr('data-auto-width') === undefined) {
          const termWidth = calcTextWidth($(this).text(),...calcCharWidth(getCssSelector(this)));
          $(this).css('width', termWidth);
       }
