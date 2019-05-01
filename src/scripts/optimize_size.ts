@@ -60,6 +60,6 @@ window.addEventListener('resize', () => {
    }
 });
 
-window.addEventListener('resize', adjustBrandingWrapperMargin);
+// window.addEventListener('resize', adjustBrandingWrapperMargin);
 window.addEventListener('resizeHorizontally', adjustWrapperFrameSize);
 window.addEventListener('resizeHorizontally', adjustTextWidth);
