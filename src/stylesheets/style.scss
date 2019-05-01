@@ -66,6 +66,10 @@ h1, h2, h3, p, dt, dd, li {
     // width: auto; // span.line のwidthはJavaScriptによって制御される
     overflow: hidden;
     white-space: nowrap;
+
+    &[data-auto-width] {
+      overflow: visible;
+    }
   }
 
   &.active {
