@@ -79,6 +79,8 @@ h1, h2, h3, p, dt, dd, li {
   height: auto;
   width: auto;
   white-space: nowrap;
+  padding: 0;
+  margin: 0;
 }
 
 section.component-wrapper {
@@ -409,9 +411,13 @@ body {
         margin: 0 0 10px 0;
         width: 100%;
         overflow: hidden;
-        height: 25px;
+        height: 30px;
 
-        span {
+        @include small-screen {
+          height: 25px;
+        }
+
+        > span {
           display: inline-block;
           background: #b90000;
           color: white;

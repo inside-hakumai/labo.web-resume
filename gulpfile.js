@@ -13,8 +13,6 @@ const webpackConfig = require("./webpack.config");
 
 const tsProject = ts.createProject('tsconfig.json');
 
-const contents = JSON.parse(fs.readFileSync('./contents.json', 'utf8'));
-
 function clean(cb) {
   rimraf('./dist', cb);
 }
@@ -69,10 +67,19 @@ function image(cb) {
 }
 
 function html(cb) {
-  src('src/index.ejs')
-    .pipe(ejs(contents, {rmWhitespace: true}, {ext: '.html'}))
-    .pipe(dest('dist'));
-  cb();
+  const contents = JSON.parse(fs.readFileSync('./contents.json', 'utf8'));
+  const parseContents = require("./src/build-scripts/parse_contents").splitContentTextsIntoTerms;
+  const escapeContents = require("./src/build-scripts/parse_contents").escapeContents;
+
+  parseContents(contents)
+    .then(escapeContents)
+    .then((resultContents) => {
+      console.log(resultContents);
+      src('src/index.ejs')
+        .pipe(ejs(resultContents, {rmWhitespace: true}, {ext: '.html'}))
+        .pipe(dest('dist'));
+      cb();
+    });
 }
 
 function asset(cb) {
@@ -81,6 +88,7 @@ function asset(cb) {
   cb();
 }
 
+exports.clean = clean;
 exports.css = css;
 exports.js = js;
 exports.lib_css = lib_css;
@@ -90,6 +98,7 @@ exports.html = html;
 exports.assert = asset;
 
 const build = parallel(css, js, lib_css, /*lib_js, */image, html, asset);
+exports.build = build;
 
 task('watch', function() {
   watch(

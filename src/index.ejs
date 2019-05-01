@@ -1,4 +1,9 @@
 <%
+function arrayToString(array) {
+  return "[" + array.map(item => `"${item}"`).join(",") + "]";
+}
+
+
 function yieldAffiliationHtml(affiliation) {
   var resultStr = "";
   var lineIndex = 0;
@@ -7,10 +12,10 @@ function yieldAffiliationHtml(affiliation) {
     resultStr += "<li>";
 
     while (lineIndex < affiliation.ja.length || lineIndex < affiliation.en.length) {
-      var jaText = lineIndex < affiliation.ja.length ? affiliation.ja[lineIndex] : "";
-      var enText = lineIndex < affiliation.en.length ? affiliation.en[lineIndex] : "";
+      var jaText = lineIndex < affiliation.ja.length ? arrayToString(affiliation.ja[lineIndex]) : "";
+      var enText = lineIndex < affiliation.en.length ? arrayToString(affiliation.en[lineIndex]) : "";
 
-      resultStr += `<p data-ja-text="${jaText}" data-en-text="${enText}">${jaText}</p>`;
+      resultStr += `<p data-ja-text='${jaText}' data-en-text='${enText}'>${jaText}</p>`;
       lineIndex += 1;
     }
 
@@ -20,24 +25,39 @@ function yieldAffiliationHtml(affiliation) {
 }
 
 function yieldAuthorList(publication) {
-    var resultStr = "";
-    publication.author.forEach(function (atr, index, array) {
-        if (atr === name.ja) {
-            resultStr += `<span class="author_me">${atr}</span>`;
-        } else {
-            resultStr += atr;
-        }
 
-        if (index !== array.length - 1) {
-            resultStr += "，";
-        }
+  var attrText = "";
+  publication.author.forEach(function (atr, index, array) {
+    attrText += `"${atr}${index !== array.length - 1 ? "，" : ""}"`;
+
+    if (index !== array.length - 1) {
+      attrText += ",";
+    }
+  });
+
+  attrText = `[${attrText}]`;
+
+
+  var resultStr = `<p class="publication_author" data-text='${attrText}'>`;
+    publication.author.forEach(function (atr, index, array) {
+      resultStr += atr;
+
+      if (index !== array.length - 1) {
+        resultStr += "，";
+      }
     });
+
+    resultStr += "</p>";
+
     return resultStr;
 }
 
 function yieldConference(publication) {
-    var resultStr = publication.conference;
-    return resultStr;
+  var resultStr = `<p class="publication_conference" data-text='${arrayToString(publication.conference)}'>`;
+  resultStr += publication.conference.join("");
+  resultStr += "</p>";
+
+  return resultStr;
 }
 
 function yieldAwardsHtml(awards) {
@@ -47,8 +67,8 @@ function yieldAwardsHtml(awards) {
         resultStr += "<dl>";
 
         awards.forEach(function(entry) {
-            resultStr += `<dt data-ja-text="${entry.scene}" data-en-text="${entry.scene}">${entry.scene}</dt>`;
-            resultStr += `<dd data-ja-text="${entry.award}" data-en-text="${entry.award}">${entry.award}</dd>`;
+            resultStr += `<dt data-ja-text='${arrayToString(entry.scene)}' data-en-text='${arrayToString(entry.scene)}'>${arrayToString(entry.scene)}</dt>`;
+            resultStr += `<dd data-ja-text='["${entry.award}"]' data-en-text='["${entry.award}"]'>${entry.award}</dd>`;
         });
 
         resultStr += "</dl>";
@@ -60,14 +80,14 @@ function yieldWorksHtml(works) {
     var resultStr = "";
 
     works.forEach(function(workTypeEntry) {
-        resultStr += `<h3 data-ja-text="${workTypeEntry.type.ja}" data-en-text="${workTypeEntry.type.en}">${workTypeEntry.type.ja}</h3>`;
+        resultStr += `<h3 data-ja-text='["${workTypeEntry.type.ja}"]' data-en-text='["${workTypeEntry.type.en}"]'>${workTypeEntry.type.ja}</h3>`;
 
         if (workTypeEntry.entries && workTypeEntry.entries.length !== 0) {
             resultStr += "<dl>";
 
             workTypeEntry.entries.forEach(function(workEntry) {
-                resultStr += `<dt data-ja-text="${workEntry.title}" data-en-text="${workEntry.title}">${workEntry.title}</dt>`;
-                resultStr += `<dd data-ja-text="${workEntry.detail}" data-en-text="${workEntry.detail}">${workEntry.detail}</dd>`;
+                resultStr += `<dt data-ja-text='["${workEntry.title}"]' data-en-text='["${workEntry.title}"]'>${workEntry.title}</dt>`;
+                resultStr += `<dd data-ja-text='${arrayToString(workEntry.detail)}' data-en-text='${arrayToString(workEntry.detail)}'>${arrayToString(workEntry.detail)}</dd>`;
             });
 
             resultStr += "</dl>";
@@ -108,14 +128,14 @@ function yieldWorksHtml(works) {
 
     <div id="branding-wrapper">
         <section id="title-wrapper" class="component-wrapper">
-            <h1 data-ja-text="<%= name.ja %>" data-en-text="<%= name.en %>"><%= name.ja %></h1>
+            <h1 data-ja-text='["<%= name.ja %>"]' data-en-text='["<%= name.en %>"]'><%= name.ja %></h1>
         </section>
         <div id="scroll-down"></div>
     </div>
 
     <div class="row double">
         <section id="affiliation" class="component-wrapper">
-            <h2 data-ja-text="所属" data-en-text="Affiliation">所属</h2>
+            <h2 data-ja-text='["所属"]' data-en-text='["Affiliation"]'>所属</h2>
             <ul>
                 <% affiliations.forEach(function(aff){ %>
                     <%- yieldAffiliationHtml(aff) %>
@@ -124,9 +144,9 @@ function yieldWorksHtml(works) {
         </section>
 
         <section id="contact" class="component-wrapper">
-            <h2 data-ja-text="連絡先" data-en-text="Contact">連絡先</h2>
+            <h2 data-ja-text='["連絡先"]' data-en-text='["Contact"]'>連絡先</h2>
             <ul>
-                <li><p><%= contact.email %></p></li> <!-- todo 連絡先の画像を挿入 -->
+                <li data-text='<%- arrayToString(contact.email) -%>'><p><%- arrayToString(contact.email) %></p></li> <!-- todo 連絡先の画像を挿入 -->
                 <li class="github_link"><p><a href="https://github.com/inside-hakumai" target="_blank"><img src="./img/github.png" alt="GitHub"></a></p></li>
             </ul>
         </section>
@@ -134,11 +154,11 @@ function yieldWorksHtml(works) {
 
     <div class="row single">
         <section id="education" class="component-wrapper">
-            <h2 data-ja-text="学歴" data-en-text="Education">学歴</h2>
+            <h2 data-ja-text='["学歴"]' data-en-text='["Education"]'>学歴</h2>
             <dl>
                 <% education.forEach(function(edu) { %>
-                    <dt data-ja-text="<%= edu.period.ja %>" data-en-text="<%=edu.period.en %>"><%= edu.period.ja %></dt>
-                    <dd data-ja-text="<%= edu.affiliation.ja %>" data-en-text="<%=edu.affiliation.en %>"><%= edu.affiliation.ja %></dd>
+                    <dt data-ja-text='["<%= edu.period.ja %>"]' data-en-text='["<%=edu.period.en %>"]'><%= edu.period.ja %></dt>
+                    <dd data-ja-text='<%- arrayToString(edu.affiliation.ja) %>' data-en-text='<%- arrayToString(edu.affiliation.en) %>'><%- arrayToString(edu.affiliation.ja) %></dd>
                 <% }) %>
             </dl>
         </section>
@@ -146,11 +166,11 @@ function yieldWorksHtml(works) {
 
     <div class="row single right">
         <section id="research" class="component-wrapper">
-            <h2 data-ja-text="研究分野" data-en-text="Research Interests">研究分野</h2>
+            <h2 data-ja-text='["研究分野"]' data-en-text='["Research", "Interests"]'>研究分野</h2>
             <dl>
                 <% researches.forEach(function(res) { %>
-                    <dt data-ja-text="<%= res.title.ja %>" data-en-text="<%= res.title.en %>"><%= res.title.ja %></dt>
-                    <dd data-ja-text="<%= res.detail.ja %>" data-en-text="<%= res.detail.en %>"><%= res.detail.ja %></dd>
+                    <dt data-ja-text='["<%= res.title.ja %>"]' data-en-text='["<%= res.title.en %>"]'><%= res.title.ja %></dt>
+                    <dd data-ja-text='<%- arrayToString(res.detail.ja) %>' data-en-text='<%- arrayToString(res.detail.en) %>'><%- arrayToString(res.detail.ja) %></dd>
                 <% }) %>
             </dl>
         </section>
@@ -158,14 +178,16 @@ function yieldWorksHtml(works) {
 
     <div class="row single">
         <section id="publication" class="component-wrapper">
-            <h2 data-ja-text="研究業績" data-en-text="Publications">研究業績</h2>
-            <h3 data-ja-text="国内会議発表" data-en-text="Domestic Conferences">国内会議発表</h3>
+            <h2 data-ja-text='["研究業績"]' data-en-text='["Publications"]'>研究業績</h2>
+            <h3 data-ja-text='["国内会議発表"]' data-en-text='["Domestic", "Conferences"]'>国内会議発表</h3>
             <dl>
                 <% publications.domestic.forEach(function(pub) { %>
-                    <dt><%= pub.title %><%- pub.award ? `<span class="award">${pub.award}</span>` : "" %></dt>
+                    <dt data-text='<%- arrayToString(pub.title) %>'><%- pub.title.join("") %></dt>
+                    <%- pub.award ? `<p class="award"><span data-text='["${pub.award}"]'>${pub.award}</span></p>` : "" %>
+
                     <dd>
-                        <p class="publication_author"><%- yieldAuthorList(pub) %></p>
-                        <p class="publication_conference"><%- yieldConference(pub) %></p>
+                        <%- yieldAuthorList(pub) %>
+                        <%- yieldConference(pub) %>
                     </dd>
                 <% }) %>
             </dl>
@@ -174,14 +196,14 @@ function yieldWorksHtml(works) {
 
     <div class="row single right">
         <section id="awards" class="component-wrapper">
-            <h2 data-ja-text="表彰等" data-en-text="Awards">表彰等</h2>
+            <h2 data-ja-text='["表彰等"]' data-en-text='["Awards"]'>表彰等</h2>
             <%- yieldAwardsHtml(awards) %>
         </section>
     </div>
 
     <div class="row single">
         <section id="works" class="component-wrapper">
-            <h2 data-ja-text="職歴" data-en-text="Work Experiences">職歴</h2>
+            <h2 data-ja-text='["職歴"]' data-en-text='["Work Experiences"]'>職歴</h2>
             <%- yieldWorksHtml(works) %>
         </section>
     </div>
