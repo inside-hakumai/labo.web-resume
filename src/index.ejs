@@ -102,7 +102,7 @@ function yieldWorksHtml(works) {
 
 <head>
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title><%= name.ja %> - <%= name.en %></title>
+    <title><%= unescape(name.ja) %> - <%= unescape(name.en) %></title>
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP:400,500,700,900&amp;subset=japanese" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Sawarabi+Mincho" rel="stylesheet">
     <link rel="stylesheet" href="./css/normalize.css">
