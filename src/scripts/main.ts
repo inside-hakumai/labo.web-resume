@@ -50,7 +50,7 @@ function decodeTextAndWrapInBlockSpan(langType: langType) {
             const termWidth = calcTextWidth(term,...calcCharWidth(getCssSelector(node)));
             newWrapperNode.appendChild($(`<span class="line" style="width: ${termWidth}px">${term}</span>`).get(0));
          } else {
-            newWrapperNode.appendChild($(`<span class="line">${term}</span>`).get(0));
+            newWrapperNode.appendChild($(`<span class="line" data-auto-width>${term}</span>`).get(0));
          }
       }
 

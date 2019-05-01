@@ -1,6 +1,6 @@
 import 'jquery'
 import $ from "jquery";
-import {calcTextWidth, ensureNotUndefinedOrNull} from "./helpers";
+import {calcCharWidth, calcTextWidth, ensureNotUndefinedOrNull, getCssSelector} from "./helpers";
 
 
 /**
@@ -27,12 +27,12 @@ function adjustWrapperFrameSize() {
 }
 
 function adjustTextWidth() {
-   const jaFontSize = Number.parseInt($('body').css('font-size').slice(0, -2));
-   const enFontSize = jaFontSize / 2;
+   calcCharWidth.resultCache = {};
    $('span.line').each(function() {
-      $(this).css('width',
-         `${calcTextWidth($(this).text(), enFontSize, jaFontSize)}px`
-      );
+      if ($(this).attr('data-auto-width') !== undefined) {
+         const termWidth = calcTextWidth($(this).text(),...calcCharWidth(getCssSelector(this)));
+         $(this).css('width', termWidth);
+      }
    });
 }
 
