@@ -98,6 +98,7 @@ exports.html = html;
 exports.assert = asset;
 
 const build = parallel(css, js, lib_css, /*lib_js, */image, html, asset);
+exports.build = build;
 
 task('watch', function() {
   watch(

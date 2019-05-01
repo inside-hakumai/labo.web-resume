@@ -32,7 +32,8 @@ function splitText(tokens, ignoreSpace) {
     if (i !== tokens.length - 1) {
       if (token["pos"] === "助詞"
         || (!ignoreSpace && token["pos"] === "記号" && token["pos_detail_1"] === "空白")
-        || tokenText === "," || tokenText === "，") {
+        || tokenText === "," || tokenText === "，"
+        || token["surface_form"].length > 15) {
         charsBuffer += tokenText;
         resultTerms.push(charsBuffer);
         charsBuffer = '';
