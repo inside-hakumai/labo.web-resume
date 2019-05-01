@@ -146,7 +146,7 @@ function yieldWorksHtml(works) {
         <section id="contact" class="component-wrapper">
             <h2 data-ja-text='["連絡先"]' data-en-text='["Contact"]'>連絡先</h2>
             <ul>
-                <li><p><%- arrayToString(contact.email) %></p></li> <!-- todo 連絡先の画像を挿入 -->
+                <li data-text='<%- arrayToString(contact.email) -%>'><p><%- arrayToString(contact.email) %></p></li> <!-- todo 連絡先の画像を挿入 -->
                 <li class="github_link"><p><a href="https://github.com/inside-hakumai" target="_blank"><img src="./img/github.png" alt="GitHub"></a></p></li>
             </ul>
         </section>
