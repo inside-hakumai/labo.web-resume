@@ -10,13 +10,13 @@ import {calcCharWidth, calcTextWidth, ensureNotUndefinedOrNull, getCssSelector} 
 function adjustBrandingWrapperMargin() {
    const innerHeight = window.innerHeight;
    $("#branding-wrapper")
-      .css('padding-top', `${(innerHeight-200)/2}px`)
+      .css('padding-top', `${(innerHeight - 200) / 2}px`)
       .css('height', `${innerHeight}px`);
 }
 
 
 function adjustWrapperFrameSize() {
-   $('.component-wrapper').each(function() {
+   $('.component-wrapper').each(function () {
       if (!$(this).hasClass('done-animation')) return;
 
       const titleDomWidth = ensureNotUndefinedOrNull($(this).outerWidth());
@@ -28,9 +28,9 @@ function adjustWrapperFrameSize() {
 
 function adjustTextWidth() {
    calcCharWidth.resultCache = {};
-   $('span.line').each(function() {
+   $('span.line').each(function () {
       if ($(this).attr('data-auto-width') === undefined) {
-         const termWidth = calcTextWidth($(this).text(),...calcCharWidth(getCssSelector(this)));
+         const termWidth = calcTextWidth($(this).text(), ...calcCharWidth(getCssSelector(this)));
          $(this).css('width', termWidth);
       }
    });
