@@ -1,23 +1,18 @@
 import $ from "jquery";
-
 import ShuffleText from "shuffle-text";
+import anime from 'animejs';
+import UIkit from 'uikit';
+import Icons from 'uikit/dist/js/uikit-icons';
+import "./optimize_size";
+import {calcCharWidth, calcTextWidth, ensureNotUndefinedOrNull, getCssSelector} from './helpers';
+require("node_modules/jquery-inview/jquery.inview.js");
 
 // @ts-ignore
 window.$ = $;
 // @ts-ignore
 window.ShufffleText = ShuffleText;
 
-import anime from 'animejs';
-
-import UIkit from 'uikit';
-import Icons from 'uikit/dist/js/uikit-icons';
-
 UIkit.use(Icons);
-
-require("node_modules/jquery-inview/jquery.inview.js");
-
-import "./optimize_size";
-import {isHalf, ensureNotUndefinedOrNull, calcTextWidth, calcCharWidth, getCssSelector} from './helpers';
 
 type langType = "ja" | "en";
 
