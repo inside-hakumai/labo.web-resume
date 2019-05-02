@@ -11,6 +11,7 @@ import anime from 'animejs';
 
 import UIkit from 'uikit';
 import Icons from 'uikit/dist/js/uikit-icons';
+
 UIkit.use(Icons);
 
 require("node_modules/jquery-inview/jquery.inview.js");
@@ -20,10 +21,10 @@ import {isHalf, ensureNotUndefinedOrNull, calcTextWidth, calcCharWidth, getCssSe
 
 type langType = "ja" | "en";
 
-let currentLang:langType = "ja";
+let currentLang: langType = "ja";
 
 let timeOnReady: number | null = null;
-let timeOnLoad:  number | null = null;
+let timeOnLoad: number | null = null;
 
 let jaCharacterWidth: number | null = null;
 let enCharacterWidth: number | null = null;
@@ -47,7 +48,7 @@ function decodeTextAndWrapInBlockSpan(langType: langType) {
          // console.debug(term);
 
          if (node.tagName !== "H1" && node.tagName !== "H2" && node.tagName !== "H3") {
-            const termWidth = calcTextWidth(term,...calcCharWidth(getCssSelector(node)));
+            const termWidth = calcTextWidth(term, ...calcCharWidth(getCssSelector(node)));
             newWrapperNode.appendChild($(`<span class="line" style="width: ${termWidth}px">${term}</span>`).get(0));
          } else {
             newWrapperNode.appendChild($(`<span class="line" data-auto-width>${term}</span>`).get(0));
@@ -67,7 +68,7 @@ function switchLang(langType: langType) {
 
    decodeTextAndWrapInBlockSpan(langType);
 
-   $(`*[data-${langType}-text], *[data-text]`).each(function() {
+   $(`*[data-${langType}-text], *[data-text]`).each(function () {
       if ($(this).hasClass("active")) {
          $(this).find("span.line").each(function () {
             const shuffleText = new ShuffleText(this);
@@ -131,7 +132,7 @@ async function appearWithShuffleEffect(targetDom: HTMLElement): Promise<void> {
    }));
 }
 
-async function spin(wrapperDom: HTMLElement, duration:number = 2000): Promise<void> {
+async function spin(wrapperDom: HTMLElement, duration: number = 2000): Promise<void> {
 
    if (!$(wrapperDom).hasClass('component-wrapper') || !$(wrapperDom).attr('id')) {
       throw Error('Animation target node must have id and "component-wrapper" class');
@@ -143,13 +144,13 @@ async function spin(wrapperDom: HTMLElement, duration:number = 2000): Promise<vo
       anime.timeline({})
          .add({
             targets: `#${wrapperDomId} div.frame-fastspin`,
-            rotate: [0, 360*duration/2000],
+            rotate: [0, 360 * duration / 2000],
             duration: duration,
             easing: 'linear',
          }, 0)
          .add({
             targets: `#${wrapperDomId} div.frame-slowspin`,
-            rotate: [0, 180*duration/2000],
+            rotate: [0, 180 * duration / 2000],
             duration: duration,
             easing: 'linear',
             changeComplete: () => {
@@ -173,7 +174,7 @@ async function executeAppearingAnimation(wrapperDom: HTMLElement) {
 
    const wrapperDomId = $(wrapperDom).attr('id');
 
-   const wrapperDomWidth  = ensureNotUndefinedOrNull($(wrapperDom).outerWidth());
+   const wrapperDomWidth = ensureNotUndefinedOrNull($(wrapperDom).outerWidth());
    const wrapperDomHeight = ensureNotUndefinedOrNull($(wrapperDom).outerHeight());
 
    $(wrapperDom).addClass('on-animation');
@@ -241,11 +242,11 @@ async function executeAppearingAnimation(wrapperDom: HTMLElement) {
 
             setTimeout(() => {
                return Promise.all(effectPromises)
-               .then(() => {
-                  $(wrapperDom).removeClass('on-animation');
-                  $(wrapperDom).addClass('done-animation');
-                  resolve()
-               })
+                  .then(() => {
+                     $(wrapperDom).removeClass('on-animation');
+                     $(wrapperDom).addClass('done-animation');
+                     resolve()
+                  })
             }, 250);
          })
       ]);
@@ -290,11 +291,13 @@ async function executeTitleComponentAnimation() {
                      resolve();
                   }
                }, 100)
-            }),
+         }),
          new Promise(resolve => {
             setTimeout(() => {
-               appearWithShuffleEffect($("#title-wrapper h1")[0]).then(() => {resolve()});
-               }, 250);
+               appearWithShuffleEffect($("#title-wrapper h1")[0]).then(() => {
+                  resolve()
+               });
+            }, 250);
          })
       ]);
 }
@@ -316,9 +319,9 @@ $(async () => {
       }
    });
 
-   $("#language-control button").on("click", function() {
+   $("#language-control button").on("click", function () {
       if (!$(this).hasClass("button-active")) {
-         const nextLang =  $(this).attr("data-lang");
+         const nextLang = $(this).attr("data-lang");
          if (nextLang) {
             if (nextLang === "ja" || nextLang === "en") {
                switchLang(nextLang);
@@ -335,7 +338,7 @@ $(async () => {
 
 
 let isAlreadyLoaded = false;
-$(window).on('load', async function() {
+$(window).on('load', async function () {
    isAlreadyLoaded = true;
 
    decodeTextAndWrapInBlockSpan("ja");
@@ -344,5 +347,5 @@ $(window).on('load', async function() {
 
    timeOnLoad = performance.now();
    const timeOnLoadFromReady = timeOnLoad - (timeOnReady || 0);
-   console.debug(`Time to "load"  event from opening the page: ${timeOnLoad.toFixed(0)} ms (${timeOnLoadFromReady.toFixed(0)} ms from "ready" event)` );
+   console.debug(`Time to "load"  event from opening the page: ${timeOnLoad.toFixed(0)} ms (${timeOnLoadFromReady.toFixed(0)} ms from "ready" event)`);
 });

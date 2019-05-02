@@ -167,6 +167,7 @@ div.row {
           width: 100%;
         }
       }
+
       &:nth-child(2) {
         width: 25%;
         @include middle-screen {
@@ -227,6 +228,23 @@ body {
             position: absolute;;
             top: 0;
             left: 100px;
+          }
+        }
+      }
+
+      @include small-screen {
+        padding-left: 15px;
+        width: 240px;
+
+        div.segmented-control {
+
+          button.uk-button.uk-button-small {
+            width: 77px;
+            padding: 0 5px;
+
+            &:nth-child(2) {
+              left: 77px;
+            }
           }
         }
       }
@@ -375,12 +393,20 @@ body {
         }
 
         @-webkit-keyframes updown {
-          from {bottom: 50px;}
-          to {bottom: 30px;}
+          from {
+            bottom: 50px;
+          }
+          to {
+            bottom: 30px;
+          }
         }
         @keyframes updown {
-          from {bottom: 50px;}
-          to {bottom: 30px;}
+          from {
+            bottom: 50px;
+          }
+          to {
+            bottom: 30px;
+          }
         }
       }
     }
@@ -391,7 +417,7 @@ body {
         padding-left: 0;
         border-left: 0;
 
-        &.github_link img{
+        &.github_link img {
           width: 40px;
           height: auto;
         }
@@ -462,7 +488,7 @@ body {
 
 footer div#grid {
   opacity: 0;
-  transition: opacity .5s linear ;
+  transition: opacity .5s linear;
   visibility: hidden;
 
   div.grid-horizontal {
